@@ -1,0 +1,61 @@
+#selection-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  padding: 0 100px;
+  background-color: #3f51b5;
+  margin-bottom: 20px;
+}
+
+#slider-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 50px;
+}
+
+mat-slider {
+  width: 300px;
+  margin: 0 50px;
+  padding: 0;
+}
+
+mat-select {
+  font-size: 18px;
+  margin: 0 50px;
+}
+
+::ng-deep .mat-select-value{
+  color: #ff4081 !important;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button{
+  background-color: #ff4081;
+}
+
+#start-button{
+  margin-left: 150px;
+}
+
+mat-label {
+  font-size: 20px;
+  color: #ff4081;
+}
+
+.mat-select-value, mat-select  span, mat-option{
+  color: #ff4081;
+}

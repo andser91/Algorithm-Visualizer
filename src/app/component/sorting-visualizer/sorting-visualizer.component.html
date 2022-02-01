@@ -1,0 +1,27 @@
+<div class="header">
+
+  <button mat-raised-button (click)="onClickNewArray()">New Array</button>
+
+  <div id="slider-container">
+    <mat-label>Change Array Dimension</mat-label>
+    <mat-slider (input)="onInputChange($event)" thumbLabel min="20" max="200" step="10" [(ngModel)]="size"></mat-slider>
+  </div>
+
+  <div id="selection-container">
+    <mat-form-field>
+      <mat-select [(value)]="selectedAlgorithm">
+        <mat-option *ngFor="let algorithm of algorithms" [value]="algorithm">
+          {{algorithm.toString()}}
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button id="start-button" mat-raised-button (click)="eventSubject.next(selectedAlgorithm)">Start</button>
+
+</div>
+
+<div class="container">
+  <app-array-bar-chart [svgArray]=" array | svgBarPipe " [event]="eventSubject.asObservable()"></app-array-bar-chart>
+</div>

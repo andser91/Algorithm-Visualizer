@@ -1,0 +1,11 @@
+<svg width="1600" height="700" viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg">
+  <style>svg {
+    background-color: #f7f7f7;
+  }</style>
+  <g>
+    <line *ngFor="let elem of svgArray; index as i" [attr.x1]="elem.x1" [attr.x2]="elem.x2"
+          [attr.y1]="elem.y1" [attr.y2]="elem.y2" [attr.data.id] = "i"
+          [attr.stroke-width]="800/svgArray.length" [attr.stroke]="elem.color">
+    </line>
+  </g>
+</svg>
