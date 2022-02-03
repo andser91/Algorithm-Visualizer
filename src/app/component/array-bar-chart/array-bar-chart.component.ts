@@ -5,7 +5,7 @@ import {SortingServiceFactoryService} from "../../service/sorting-service-factor
 import {Sorter} from "../../service/sorter";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
-import {AnimationServiceService} from "../../service/animation-service.service";
+import {AnimationServiceService} from "../../service/common/animation-service.service";
 
 
 @Component({
@@ -19,7 +19,7 @@ export class ArrayBarChartComponent implements OnInit {
   @Input()
   svgArray: Array<SvgLine> = new Array<SvgLine>();
   @Input()
-  velocity: number = 0;
+  velocity: number = 10;
   @Input() startEvent: Observable<PlaySortingEvent> | undefined;
   private startEventSubscription: Subscription | undefined;
   @Input() resetEvent: Observable<void> | undefined;
@@ -39,7 +39,7 @@ export class ArrayBarChartComponent implements OnInit {
     if (playSortingEvent.status === AnimationStatus.STOPPED) {
       this.sorter = this.sortingServiceFactory.getSorter(playSortingEvent.algorithm)
       let animations = this.sorter?.sort(this.svgArray);
-      this.animationService.executeAnimations(this.svgArray, animations)
+      this.animationService.executeAnimations(this.svgArray, animations, this.velocity)
     }
     if (playSortingEvent.status === AnimationStatus.PAUSED) {
       this.animationService.resumeAnimations();

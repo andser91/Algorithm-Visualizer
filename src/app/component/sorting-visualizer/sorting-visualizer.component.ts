@@ -4,8 +4,6 @@ import {Subject, timer} from "rxjs";
 import {Algorithm} from "../../model/algorithm";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
-import {SortingServiceFactoryService} from "../../service/sorting-service-factory.service";
-import {Sorter} from "../../service/sorter";
 
 @Component({
   selector: 'app-sorting-visualizer',
@@ -16,7 +14,7 @@ export class SortingVisualizerComponent implements OnInit {
 
   array : Array<number> = new Array<number>();
   size : number = 100;
-  velocity: number = 5000;
+  velocity: number = 10;
   algorithms: Array<Algorithm> = Object.values(Algorithm)
   selectedAlgorithm: Algorithm = Algorithm.BUBBLE_SORT;
   startSubject: Subject<PlaySortingEvent> = new Subject<PlaySortingEvent>();

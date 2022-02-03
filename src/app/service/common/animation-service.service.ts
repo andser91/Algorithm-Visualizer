@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import {Timer} from "../model/timer";
-import {Animation} from "../model/animation/animation";
-import {TerminationAnimation} from "../model/animation/terminationAnimation";
-import {SvgLine} from "../model/svgLine";
-import {animation} from "@angular/animations";
+import {Injectable} from '@angular/core';
+import {Timer} from "../../model/timer";
+import {Animation} from "../../model/animation/animation";
+import {TerminationAnimation} from "../../model/animation/terminationAnimation";
+import {SvgLine} from "../../model/svgLine";
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +11,15 @@ export class AnimationServiceService {
 
   public timers: Array<Timer> = new Array<Timer>()
 
-  constructor() {}
+  constructor() {
+  }
 
-  executeAnimations(array : Array<SvgLine> ,animations: Array<Animation>) {
-    let animationTime = 12000/animations.length
+  executeAnimations(array: Array<SvgLine>, animations: Array<Animation>, velocity: number) {
+    let animationTime = this.calculateAnimationTime(animations.length, velocity)
     animations.push(new TerminationAnimation(this, array))
     for (let i = 0; i < animations.length; i++) {
       let timer = new Timer(() => {
-          animations[i].animate();
+        animations[i].animate();
       }, i * animationTime)
       this.timers.push(timer);
     }
@@ -49,4 +49,10 @@ export class AnimationServiceService {
     this.timers = []
   }
 
+  private calculateAnimationTime(length: number, velocity: number): number {
+    console.log(length)
+    let time = (25000 - velocity * 1000) / length
+    console.log(time)
+    return time;
+  }
 }

@@ -1,6 +1,6 @@
 import {Animation} from "./animation";
 import {SvgLine} from "../svgLine";
-import {AnimationServiceService} from "../../service/animation-service.service";
+import {AnimationServiceService} from "../../service/common/animation-service.service";
 
 export class TerminationAnimation extends Animation {
 
