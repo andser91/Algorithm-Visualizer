@@ -1,64 +1,38 @@
 import {Injectable} from '@angular/core';
-import {Comparison} from "../../interface/comparison";
-import {SvgLine} from "../../interface/svgLine";
+import {SvgLine} from "../../model/svgLine";
 import {Sorter} from "../sorter";
+import {ColorAnimation} from "../../model/animation/colorAnimation";
+import {SwapAnimation} from "../../model/animation/swapAnimation";
+import {TerminationAnimation} from "../../model/animation/terminationAnimation";
+import {Animation} from "../../model/animation/animation";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BubbleSortService implements Sorter{
 
-  private animationTime: number = 0;
-  private comparisons: Array<Comparison> = new Array<Comparison>()
-  private timeouts: Array<any> = new Array<any>()
-
   constructor() {
   }
 
-  sort(svgArray: Array<SvgLine>) {
+  sort(svgArray: Array<SvgLine>) : Array<Animation> {
+    let animations : Array<Animation> = new Array<Animation>();
     for (let i = 0; i < svgArray.length; i++) {
       for (let j = 0; j < svgArray.length - 1; j++) {
         if (svgArray[j].temp > svgArray[j + 1].temp) {
-          this.comparisons.push(new Comparison(j, 0, j + 1, 0, false, "red", "red", false))
-          this.comparisons.push(new Comparison(j, 0, j + 1, 0, false, "#673ab7", "#673ab7", false))
+          animations.push(new ColorAnimation("red", svgArray[j], svgArray[j + 1]))
+          animations.push(new ColorAnimation("#673ab7", svgArray[j], svgArray[j + 1]))
           let temp = svgArray[j].temp
           let temp2 = svgArray[j + 1].temp
           svgArray[j].temp = temp2
           svgArray[j + 1].temp = temp
-          this.comparisons.push(new Comparison(j, temp2, j + 1, temp, true, "", "", false))
+          animations.push(new SwapAnimation(svgArray[j], temp2, svgArray[j + 1], temp))
         }
       }
-      this.comparisons.push(new Comparison(svgArray.length -1 -i, 0, 0, 0, false, "green", "", false));
+      animations.push(new ColorAnimation("green", svgArray[svgArray.length -1 -i]))
     }
-    this.comparisons.push(new Comparison(0, 0, 0, 0, false, "", "", true))
-    this.animationTime = 12000 / this.comparisons.length;
-    this.executeSteps(svgArray);
+    return animations;
+    // this.animationTime = 12000 / this.animations.length;
   }
 
-  executeSteps(svgArray: Array<SvgLine>) {
-    for (let i = 0; i < this.comparisons.length; i++) {
-      let timeout = setTimeout(() => {
-        this.executeStep(this.comparisons[i], svgArray)
-      }, i * this.animationTime)
-      this.timeouts.push(timeout);
-    }
-  }
 
-  executeStep(comparison: Comparison, svgArray: Array<SvgLine>) {
-    if (comparison.swap) {
-      svgArray[comparison.firstIndex].y2 = comparison.firstValue
-      svgArray[comparison.secondIndex].y2 = comparison.secondValue
-    } else {
-      svgArray[comparison.firstIndex].color = comparison.firstColor
-      if (comparison.secondColor !== "") {
-        svgArray[comparison.secondIndex].color = comparison.secondColor
-      }
-    }
-    if (comparison.terminated) {
-      for (let i = 0; i < this.timeouts.length; i++) {
-        clearTimeout(this.timeouts[i]);
-        this.comparisons = []
-      }
-    }
-  }
 }

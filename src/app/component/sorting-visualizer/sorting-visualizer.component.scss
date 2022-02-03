@@ -15,15 +15,8 @@
   margin-bottom: 20px;
 }
 
-#slider-container{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 50px;
-}
-
 mat-slider {
-  width: 300px;
+  width: 200px;
   margin: 0 50px;
   padding: 0;
 }
@@ -45,10 +38,17 @@ mat-select {
 
 button{
   background-color: #ff4081;
+  color: white;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
-#start-button{
-  margin-left: 150px;
+button.hidden{
+  display: none;
 }
 
 mat-label {
@@ -59,3 +59,13 @@ mat-label {
 .mat-select-value, mat-select  span, mat-option{
   color: #ff4081;
 }
+
+mat-icon{
+  transform: scale(2.5);
+  color: white;
+}
+
+.button-wrapper{
+  margin-left: 150px;
+}
+

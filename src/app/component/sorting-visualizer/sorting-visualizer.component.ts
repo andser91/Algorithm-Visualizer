@@ -1,8 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
-import {Subject} from "rxjs";
-import {Algorithm} from "../../interface/algorithm";
-
+import {Subject, timer} from "rxjs";
+import {Algorithm} from "../../model/algorithm";
+import {AnimationStatus} from "../../model/animation/AnimationStatus";
+import {PlaySortingEvent} from "../../event/playSortingEvent";
+import {SortingServiceFactoryService} from "../../service/sorting-service-factory.service";
+import {Sorter} from "../../service/sorter";
 
 @Component({
   selector: 'app-sorting-visualizer',
@@ -11,14 +14,17 @@ import {Algorithm} from "../../interface/algorithm";
 })
 export class SortingVisualizerComponent implements OnInit {
 
-  @Output() startSortingEvent : EventEmitter<Algorithm> = new EventEmitter<Algorithm>();
-
-  public array : Array<number> = new Array<number>();
-  public size : number = 100;
-  public algorithms: Array<Algorithm> = [Algorithm.BUBBLE_SORT, Algorithm.SELECTION_SORT,
-    Algorithm.MERGE_SORT];
-  public selectedAlgorithm: Algorithm = Algorithm.BUBBLE_SORT;
-  public eventSubject: Subject<Algorithm> = new Subject<Algorithm>();
+  array : Array<number> = new Array<number>();
+  size : number = 100;
+  velocity: number = 5000;
+  algorithms: Array<Algorithm> = Object.values(Algorithm)
+  selectedAlgorithm: Algorithm = Algorithm.BUBBLE_SORT;
+  startSubject: Subject<PlaySortingEvent> = new Subject<PlaySortingEvent>();
+  resetSubject: Subject<void> = new Subject<void>()
+  playButtonClass : string = "showed"
+  pauseButtonClass: string = "hidden";
+  private status : AnimationStatus = AnimationStatus.STOPPED;
+  animationCompleted: boolean = true;
 
   constructor() {}
 
@@ -37,17 +43,39 @@ export class SortingVisualizerComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  onInputChange(event: MatSliderChange) {
+  sizeSliderChange(event: MatSliderChange) {
     this.size = event.value || 100;
-    this.generateArray(this.size);
+    this.reset();
   }
 
-  onSelectionChange($event : any) {
-    console.log(this.selectedAlgorithm);
+  velocitySliderChange(event: MatSliderChange) {
+    this.velocity = event.value || 5000;
   }
 
-  onClickNewArray() {
-    this.generateArray(this.size);
+  onNewArrayClicked() {
+    this.reset();
   }
 
+  onPlayClicked() {
+    this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
+    this.status = AnimationStatus.PLAYING;
+    this.playButtonClass = "hidden";
+    this.pauseButtonClass = "showed"
+    // this.animationCompleted = false
+  }
+
+  onPauseClicked() {
+    this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
+    this.status = AnimationStatus.PAUSED;
+    this.pauseButtonClass = "hidden";
+    this.playButtonClass = "showed";
+  }
+
+  private reset(){
+    this.status = AnimationStatus.STOPPED;
+    this.pauseButtonClass = "hidden";
+    this.playButtonClass = "showed";
+    this.generateArray(this.size)
+    this.resetSubject.next()
+  }
 }

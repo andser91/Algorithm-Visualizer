@@ -11,6 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import { MatButtonModule} from "@angular/material/button";
 import {SvgBarPipe} from "./pipe/svgBarPipe";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -19,15 +20,16 @@ import {SvgBarPipe} from "./pipe/svgBarPipe";
     ArrayBarChartComponent,
     SvgBarPipe
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatSliderModule,
-        FormsModule,
-        MatSelectModule,
-        MatButtonModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    FormsModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

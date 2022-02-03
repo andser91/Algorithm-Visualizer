@@ -1,15 +1,22 @@
 <div class="header">
 
-  <button mat-raised-button (click)="onClickNewArray()">New Array</button>
+  <button mat-raised-button (click)="onNewArrayClicked()">New Array</button>
 
-  <div id="slider-container">
-    <mat-label>Change Array Dimension</mat-label>
-    <mat-slider (input)="onInputChange($event)" thumbLabel min="20" max="200" step="10" [(ngModel)]="size"></mat-slider>
+  <div>
+    <mat-label style="display: block">Change Array Size</mat-label>
+    <mat-slider (input)="sizeSliderChange($event)" thumbLabel min="20" max="200" step="10"
+                [(ngModel)]="size"></mat-slider>
+  </div>
+
+  <div>
+    <mat-label style="display: block">Change Animation Velocity</mat-label>
+    <mat-slider (input)="velocitySliderChange($event)" thumbLabel min="2000" max="20000" step="1000"
+                [(ngModel)]="velocity"></mat-slider>
   </div>
 
   <div id="selection-container">
     <mat-form-field>
-      <mat-select [(value)]="selectedAlgorithm">
+      <mat-select [(value)]="selectedAlgorithm" [disabled]="!animationCompleted">
         <mat-option *ngFor="let algorithm of algorithms" [value]="algorithm">
           {{algorithm.toString()}}
         </mat-option>
@@ -18,10 +25,21 @@
     </mat-form-field>
   </div>
 
-  <button id="start-button" mat-raised-button (click)="eventSubject.next(selectedAlgorithm)">Start</button>
-
+  <div class="button-wrapper">
+    <button [class]="playButtonClass" id="play-button" mat-fab (click)="onPlayClicked()">
+      <mat-icon class="big">play_circle_outline</mat-icon>
+    </button>
+    <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">
+      <mat-icon class="big">pause_circle_outline</mat-icon>
+    </button>
+  </div>
 </div>
 
 <div class="container">
-  <app-array-bar-chart [svgArray]=" array | svgBarPipe " [event]="eventSubject.asObservable()"></app-array-bar-chart>
+
+  <app-array-bar-chart [velocity]="velocity"
+                       [svgArray]=" array | svgBarPipe "
+                       [startEvent]="startSubject.asObservable()"
+                       [resetEvent]="resetSubject.asObservable()">
+  </app-array-bar-chart>
 </div>

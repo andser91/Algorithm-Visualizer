@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {SvgLine} from "../interface/svgLine";
+import {SvgLine} from "../model/svgLine";
 
 @Pipe({ name: 'svgBarPipe' })
 export class SvgBarPipe implements PipeTransform {

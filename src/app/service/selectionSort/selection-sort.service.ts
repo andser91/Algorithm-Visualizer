@@ -1,72 +1,44 @@
-import { Injectable } from '@angular/core';
-import {Comparison} from "../../interface/comparison";
-import {SvgLine} from "../../interface/svgLine";
+import {Injectable} from '@angular/core';
+import {SvgLine} from "../../model/svgLine";
 import {Sorter} from "../sorter";
+import {ColorAnimation} from "../../model/animation/colorAnimation";
+import {TerminationAnimation} from "../../model/animation/terminationAnimation";
+import {SwapAnimation} from "../../model/animation/swapAnimation";
+import {Animation} from "../../model/animation/animation";
 
 @Injectable({
   providedIn: 'root'
 })
-export class SelectionSortService implements Sorter{
+export class SelectionSortService implements Sorter {
 
-  private animationTime: number = 0;
-  private comparisons: Array<Comparison> = new Array<Comparison>()
-  private timeouts: Array<any> = new Array<any>()
+  constructor() {}
 
-  constructor() { }
-
-  sort(svgArray: Array<SvgLine>) {
+  sort(svgArray: Array<SvgLine>) : Array<Animation> {
+    let animations : Array<Animation> = new Array<Animation>();
     let n = svgArray.length
     let min_idx;
     for (let i = 0; i < n - 1; i++) {
       min_idx = i;
       for (let j = i + 1; j < n; j++) {
         if (svgArray[j].temp < svgArray[min_idx].temp) {
-          this.comparisons.push(new Comparison(j, 0, min_idx, 0, false, "red", "red", false))
-          this.comparisons.push(new Comparison(j, 0, min_idx, 0, false, "#673ab7", "#673ab7", false))
+          animations.push(new ColorAnimation("red", svgArray[j], svgArray[min_idx]))
+          animations.push(new ColorAnimation("#673ab7", svgArray[j], svgArray[min_idx]))
           min_idx = j;
         } else {
-          this.comparisons.push(new Comparison(j, 0, min_idx, 0, false, "red", "red", false))
-          this.comparisons.push(new Comparison(j, 0, min_idx, 0, false, "#673ab7", "#673ab7", false))
+          animations.push(new ColorAnimation("red", svgArray[j], svgArray[min_idx]))
+          animations.push(new ColorAnimation("#673ab7", svgArray[j], svgArray[min_idx]))
         }
       }
       let temp = svgArray[min_idx].temp
       let temp2 = svgArray[i].temp
       svgArray[i].temp = temp
       svgArray[min_idx].temp = temp2
-      this.comparisons.push(new Comparison(min_idx, temp2, i, temp, true, "", "", false));
-      this.comparisons.push(new Comparison(i, 0, 0, 0, false, "green", "", false));
+      animations.push(new SwapAnimation(svgArray[min_idx], temp2, svgArray[i], temp));
+      animations.push(new ColorAnimation("green", svgArray[i]))
     }
-    this.comparisons.push(new Comparison(svgArray.length - 1, 0, 0, 0, false, "green", "", false));
-    this.comparisons.push(new Comparison(0, 0, 0, 0, false, "", "", true));
-
-    this.animationTime = 8000 / this.comparisons.length;
-    this.executeSteps(svgArray);
-  }
-
-  executeSteps(svgArray: Array<SvgLine>) {
-    for (let i = 0; i < this.comparisons.length; i++) {
-      let timeout = setTimeout(() => {
-        this.executeStep(this.comparisons[i], svgArray)
-      }, i * this.animationTime)
-      this.timeouts.push(timeout);
-    }
-  }
-
-  executeStep(comparison: Comparison, svgArray: Array<SvgLine>) {
-    if (comparison.swap) {
-      svgArray[comparison.firstIndex].y2 = comparison.firstValue
-      svgArray[comparison.secondIndex].y2 = comparison.secondValue
-    } else {
-      svgArray[comparison.firstIndex].color = comparison.firstColor
-      if (comparison.secondColor !== "") {
-        svgArray[comparison.secondIndex].color = comparison.secondColor
-      }
-    }
-    if (comparison.terminated) {
-      for (let i = 0; i < this.timeouts.length; i++) {
-        clearTimeout(this.timeouts[i]);
-        this.comparisons = []
-      }
-    }
+    animations.push(new ColorAnimation("green", svgArray[svgArray.length - 1]))
+    return animations
+    // this.animationTime = 8000 / this.animations.length;
+    // this.executeAnimations();
   }
 }
