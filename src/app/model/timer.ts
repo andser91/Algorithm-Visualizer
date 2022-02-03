@@ -1,13 +1,13 @@
 export class Timer {
 
-  private readonly callback: Function;
+  private readonly _callback: Function;
   private start: number;
   private timerId: number;
   private _remaining: number;
   private _paused : boolean;
 
   constructor(callback: Function, delay: number) {
-    this.callback = callback;
+    this._callback = callback;
     this.start = delay;
     this.timerId = delay;
     this._remaining = delay;
@@ -27,7 +27,7 @@ export class Timer {
 
   public resume() {
     this.start = new Date().getTime();
-    this.timerId = setTimeout(this.callback, this._remaining);
+    this.timerId = setTimeout(this._callback, this._remaining);
   }
 
   get paused(): boolean {
@@ -40,5 +40,9 @@ export class Timer {
 
   get remaining(): number {
     return this._remaining;
+  }
+
+  get callback(): Function {
+    return this._callback;
   }
 }

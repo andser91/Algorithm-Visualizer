@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
-import {Observable, Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {SortingServiceFactoryService} from "../../service/sorting-service-factory.service";
 import {Sorter} from "../../service/sorter";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
@@ -24,7 +24,11 @@ export class ArrayBarChartComponent implements OnInit {
   private startEventSubscription: Subscription | undefined;
   @Input() resetEvent: Observable<void> | undefined;
   private resetEventSubscription: Subscription | undefined;
+  animationFinishedEvent: Observable<void> | undefined;
+  animationFinishedEventSubscription: Subscription | undefined;
   private sorter : Sorter | undefined
+  @Output()
+  animationFinishedEventEmitter : EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private sortingServiceFactory : SortingServiceFactoryService,
               private animationService : AnimationServiceService) {
@@ -33,9 +37,13 @@ export class ArrayBarChartComponent implements OnInit {
   ngOnInit(): void {
     this.startEventSubscription = this.startEvent?.subscribe((algorithm) => this.startSorting(algorithm));
     this.resetEventSubscription = this.resetEvent?.subscribe(() => this.resetAll());
+    this.animationFinishedEventSubscription = this.animationService.animationFinishedEvent.subscribe(() => this.sendFinishEvent())
   }
 
   private startSorting(playSortingEvent : PlaySortingEvent) {
+    if (playSortingEvent.status === AnimationStatus.FINISHED){
+      console.log("already sorted!")
+    }
     if (playSortingEvent.status === AnimationStatus.STOPPED) {
       this.sorter = this.sortingServiceFactory.getSorter(playSortingEvent.algorithm)
       let animations = this.sorter?.sort(this.svgArray);
@@ -51,5 +59,15 @@ export class ArrayBarChartComponent implements OnInit {
 
   private resetAll(){
     this.animationService.clearResources();
+  }
+
+  private sendFinishEvent() {
+   this.animationFinishedEventEmitter.emit();
+  }
+
+  ngOnDestroy() : void{
+    this.startEventSubscription?.unsubscribe();
+    this.resetEventSubscription?.unsubscribe();
+    this.animationFinishedEventSubscription?.unsubscribe();
   }
 }

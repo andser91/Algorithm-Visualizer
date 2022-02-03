@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
-import {Subject, timer} from "rxjs";
+import {Subject} from "rxjs";
 import {Algorithm} from "../../model/algorithm";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
@@ -12,32 +12,33 @@ import {PlaySortingEvent} from "../../event/playSortingEvent";
 })
 export class SortingVisualizerComponent implements OnInit {
 
-  array : Array<number> = new Array<number>();
-  size : number = 100;
+  array: Array<number> = new Array<number>();
+  size: number = 100;
   velocity: number = 10;
   algorithms: Array<Algorithm> = Object.values(Algorithm)
   selectedAlgorithm: Algorithm = Algorithm.BUBBLE_SORT;
   startSubject: Subject<PlaySortingEvent> = new Subject<PlaySortingEvent>();
   resetSubject: Subject<void> = new Subject<void>()
-  playButtonClass : string = "showed"
+  playButtonClass: string = "showed"
   pauseButtonClass: string = "hidden";
-  private status : AnimationStatus = AnimationStatus.STOPPED;
+  private status: AnimationStatus = AnimationStatus.STOPPED;
   animationCompleted: boolean = true;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.generateArray(this.size);
   }
 
-  generateArray(size: number){
+  generateArray(size: number) {
     this.array = [];
-    for (let i = 1; i<= size; i++){
-      this.array.push(this.generateIntInInterval(5,1000));
+    for (let i = 1; i <= size; i++) {
+      this.array.push(this.generateIntInInterval(5, 1000));
     }
   }
 
-  generateIntInInterval(min: number, max :number){
+  generateIntInInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
@@ -55,25 +56,37 @@ export class SortingVisualizerComponent implements OnInit {
   }
 
   onPlayClicked() {
-    this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
-    this.status = AnimationStatus.PLAYING;
-    this.playButtonClass = "hidden";
-    this.pauseButtonClass = "showed"
-    // this.animationCompleted = false
+    if (this.status !== AnimationStatus.FINISHED) {
+      this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
+      this.status = AnimationStatus.PLAYING;
+      this.playButtonClass = "hidden";
+      this.pauseButtonClass = "showed"
+      this.animationCompleted = false
+    }
   }
 
   onPauseClicked() {
-    this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
-    this.status = AnimationStatus.PAUSED;
-    this.pauseButtonClass = "hidden";
-    this.playButtonClass = "showed";
+    if (this.status !== AnimationStatus.FINISHED) {
+      this.startSubject.next(new PlaySortingEvent(this.selectedAlgorithm, this.status))
+      this.status = AnimationStatus.PAUSED;
+      this.pauseButtonClass = "hidden";
+      this.playButtonClass = "showed";
+    }
   }
 
-  private reset(){
+  private reset() {
     this.status = AnimationStatus.STOPPED;
     this.pauseButtonClass = "hidden";
     this.playButtonClass = "showed";
-    this.generateArray(this.size)
     this.resetSubject.next()
+    this.animationCompleted = true
+    this.generateArray(this.size)
+  }
+
+  onAnimationFinished() {
+    this.status = AnimationStatus.FINISHED;
+    this.pauseButtonClass = "hidden";
+    this.playButtonClass = "showed";
+    this.animationCompleted = true
   }
 }

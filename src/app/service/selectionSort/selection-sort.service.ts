@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
 import {Sorter} from "../sorter";
 import {ColorAnimation} from "../../model/animation/colorAnimation";
-import {TerminationAnimation} from "../../model/animation/terminationAnimation";
 import {SwapAnimation} from "../../model/animation/swapAnimation";
 import {Animation} from "../../model/animation/animation";
 
@@ -38,7 +37,5 @@ export class SelectionSortService implements Sorter {
     }
     animations.push(new ColorAnimation("green", svgArray[svgArray.length - 1]))
     return animations
-    // this.animationTime = 8000 / this.animations.length;
-    // this.executeAnimations();
   }
 }

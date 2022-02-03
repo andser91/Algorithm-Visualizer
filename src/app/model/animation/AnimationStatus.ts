@@ -2,5 +2,6 @@
 export enum AnimationStatus{
   PLAYING = "Playing",
   PAUSED = "Paused",
-  STOPPED = "Stopped"
+  STOPPED = "Stopped",
+  FINISHED = "Finished"
 }
