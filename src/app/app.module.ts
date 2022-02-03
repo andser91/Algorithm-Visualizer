@@ -12,13 +12,17 @@ import {MatSelectModule} from "@angular/material/select";
 import { MatButtonModule} from "@angular/material/button";
 import {SvgBarPipe} from "./pipe/svgBarPipe";
 import {MatIconModule} from "@angular/material/icon";
+import { SearchVisualizerComponent } from './component/search-visualizer/search-visualizer.component';
+import { GridSvgComponent } from './component/grid-svg/grid-svg.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SortingVisualizerComponent,
     ArrayBarChartComponent,
-    SvgBarPipe
+    SvgBarPipe,
+    SearchVisualizerComponent,
+    GridSvgComponent
   ],
   imports: [
     BrowserModule,

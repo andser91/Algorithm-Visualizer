@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
-import {Sorter} from "../sorter";
+import {Sorter} from "../common/sorter";
 import {ColorAnimation} from "../../model/animation/colorAnimation";
 import {SwapAnimation} from "../../model/animation/swapAnimation";
 import {Animation} from "../../model/animation/animation";
@@ -8,11 +8,12 @@ import {Animation} from "../../model/animation/animation";
 @Injectable({
   providedIn: 'root'
 })
-export class MergeSortService implements Sorter {
+export class MergeSortService extends Sorter {
 
   private svgArray : Array<SvgLine> = []
 
-  constructor() {}
+  constructor() {
+    super();}
 
   sort(svgArray: Array<SvgLine>) : Array<Animation> {
     let animations : Array<Animation> = new Array<Animation>();
@@ -20,22 +21,20 @@ export class MergeSortService implements Sorter {
     if (svgArray.length <= 1) return animations;
     const workArray = svgArray.slice();
     const originalArray = svgArray.slice();
-    this.recursiveMergeSort(originalArray, 0, originalArray.length - 1, workArray, animations);
-    // this.animationTime = 5000 / this.animations.length;
-    // this.executeAnimations()
+    this.mergeSort(originalArray, 0, originalArray.length - 1, workArray, animations);
     return animations;
   }
 
 
-  private recursiveMergeSort(svgArray: Array<SvgLine>, startIdx: number, endIdx: number, workArray: Array<SvgLine>, animations: Array<Animation>) {
+  private mergeSort(svgArray: Array<SvgLine>, startIdx: number, endIdx: number, workArray: Array<SvgLine>, animations: Array<Animation>) {
     if (startIdx === endIdx) return;
     const middleIdx = Math.floor((startIdx + endIdx) / 2);
-    this.recursiveMergeSort(workArray, startIdx, middleIdx, svgArray, animations);
-    this.recursiveMergeSort(workArray, middleIdx + 1, endIdx, svgArray, animations);
+    this.mergeSort(workArray, startIdx, middleIdx, svgArray, animations);
+    this.mergeSort(workArray, middleIdx + 1, endIdx, svgArray, animations);
     this.merge(svgArray, startIdx, middleIdx, endIdx, workArray, animations);
   }
 
-  merge(svgArray: Array<SvgLine>, startIdx: number, middleIdx: number, endIdx: number, workArray: Array<SvgLine>, animations: Array<Animation>) {
+  private merge(svgArray: Array<SvgLine>, startIdx: number, middleIdx: number, endIdx: number, workArray: Array<SvgLine>, animations: Array<Animation>) {
     let k = startIdx;
     let i = startIdx;
     let j = middleIdx + 1;

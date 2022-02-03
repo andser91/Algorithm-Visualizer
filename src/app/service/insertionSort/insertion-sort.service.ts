@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
-import {Sorter} from "../sorter";
+import {Sorter} from "../common/sorter";
 import {Animation} from "../../model/animation/animation";
-import {SwapAnimation} from "../../model/animation/swapAnimation";
 import {ColorAnimation} from "../../model/animation/colorAnimation";
 
 @Injectable({
   providedIn: 'root'
 })
-export class InsertionSortService implements Sorter {
+export class InsertionSortService extends Sorter {
 
   constructor() {
+    super();
   }
 
   sort(svgArray: Array<SvgLine>): Array<Animation> {
@@ -23,14 +23,10 @@ export class InsertionSortService implements Sorter {
       while (j >= 0 && svgArray[j].temp > key) {
         animations.push(new ColorAnimation("red", svgArray[j], svgArray[j+1]))
         animations.push(new ColorAnimation("#673ab7", svgArray[j], svgArray[j+1]))
-        animations.push(new SwapAnimation(svgArray[j], svgArray[j +1].temp, svgArray[j + 1], svgArray[j].temp));
-        let temp = svgArray[j].temp
-        svgArray[j].temp = svgArray[j + 1].temp
-        svgArray[j + 1].temp = temp
+        this.swap(svgArray[j], svgArray[j+1], animations)
         j--;
       }
-      animations.push(new SwapAnimation(svgArray[j + 1], key));
-      svgArray[j + 1].temp = key;
+      this.insert(svgArray[j+1], key, animations)
     }
     console.log(svgArray)
     return animations;

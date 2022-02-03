@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
-import {Sorter} from "../sorter";
+import {Sorter} from "../common/sorter";
 import {ColorAnimation} from "../../model/animation/colorAnimation";
-import {SwapAnimation} from "../../model/animation/swapAnimation";
 import {Animation} from "../../model/animation/animation";
 
 @Injectable({
   providedIn: 'root'
 })
-export class SelectionSortService implements Sorter {
+export class SelectionSortService extends Sorter {
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   sort(svgArray: Array<SvgLine>) : Array<Animation> {
     let animations : Array<Animation> = new Array<Animation>();
@@ -28,11 +29,7 @@ export class SelectionSortService implements Sorter {
           animations.push(new ColorAnimation("#673ab7", svgArray[j], svgArray[min_idx]))
         }
       }
-      let temp = svgArray[min_idx].temp
-      let temp2 = svgArray[i].temp
-      svgArray[i].temp = temp
-      svgArray[min_idx].temp = temp2
-      animations.push(new SwapAnimation(svgArray[min_idx], temp2, svgArray[i], temp));
+      this.swap(svgArray[i], svgArray[min_idx], animations)
       animations.push(new ColorAnimation("green", svgArray[i]))
     }
     animations.push(new ColorAnimation("green", svgArray[svgArray.length - 1]))

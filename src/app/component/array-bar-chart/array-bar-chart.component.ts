@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
 import {Observable, Subject, Subscription} from "rxjs";
-import {SortingServiceFactoryService} from "../../service/sorting-service-factory.service";
-import {Sorter} from "../../service/sorter";
+import {SortingServiceFactoryService} from "../../service/common/sorting-service-factory.service";
+import {Sorter} from "../../service/common/sorter";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
 import {AnimationServiceService} from "../../service/common/animation-service.service";
