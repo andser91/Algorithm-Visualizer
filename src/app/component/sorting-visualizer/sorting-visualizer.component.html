@@ -3,13 +3,13 @@
   <button mat-raised-button (click)="onNewArrayClicked()">New Array</button>
 
   <div>
-    <mat-label style="display: block">Change Array Size</mat-label>
+    <mat-label>Change Array Size</mat-label>
     <mat-slider (input)="sizeSliderChange($event)" thumbLabel min="20" max="150" step="10"
                 [(ngModel)]="size"></mat-slider>
   </div>
 
   <div>
-    <mat-label style="display: block">Change Animation Velocity</mat-label>
+    <mat-label>Change Animation Velocity</mat-label>
     <mat-slider [disabled]="!animationCompleted" (input)="velocitySliderChange($event)" thumbLabel min="5" max="50" step="1"
                 [(ngModel)]="velocity"></mat-slider>
   </div>
@@ -26,7 +26,7 @@
   </div>
 
   <div class="button-wrapper">
-    <button [class]="playButtonClass" id="play-button" mat-fab (click)="onPlayClicked()">
+    <button [class]="playButtonClass" id="play-button" (click)="onPlayClicked()">
       <mat-icon class="big">play_circle_outline</mat-icon>
     </button>
     <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">

@@ -1,8 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Timer} from "../../model/timer";
-import {Animation} from "../../model/animation/animation";
-import {TerminationAnimation} from "../../model/animation/terminationAnimation";
-import {SvgLine} from "../../model/svgLine";
+import {Timer} from "../model/timer";
+import {Animation} from "../model/animation/animation";
+import {TerminationAnimation} from "../model/animation/terminationAnimation";
+import {SvgLine} from "../model/svgLine";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AnimationServiceService {
   constructor() {
   }
 
-  executeAnimations(array: Array<SvgLine>, animations: Array<Animation>, velocity: number) {
+  executeSortingAnimations(array: Array<SvgLine>, animations: Array<Animation>, velocity: number) {
     let animationTime = AnimationServiceService.calculateAnimationTime(animations.length, velocity)
     for (let i = 0; i < animations.length; i++) {
       let timer = new Timer(() => {
@@ -28,6 +28,20 @@ export class AnimationServiceService {
       new TerminationAnimation(this, array).animate();
       this.animationFinishedEvent.emit();
     }, 25000 - velocity * 1000));
+  }
+
+  executeSearchAnimations(animations: Array<Animation>) {
+    for (let i = 0; i < animations.length; i++) {
+      let timer = new Timer(() => {
+        animations[i].animate();
+      }, i * 10)
+      this.timers.push(timer);
+    }
+
+    // this.timers.push(new Timer(() => {
+    //   new TerminationAnimation(this, array).animate();
+    //   this.animationFinishedEvent.emit();
+    // }, 25000 - velocity * 1000));
   }
 
   pauseAnimations() {

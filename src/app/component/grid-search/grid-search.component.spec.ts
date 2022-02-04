@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridSvgComponent } from './grid-svg.component';
+import { GridSearchComponent } from './grid-search.component';
 
 describe('GridSvgComponent', () => {
-  let component: GridSvgComponent;
-  let fixture: ComponentFixture<GridSvgComponent>;
+  let component: GridSearchComponent;
+  let fixture: ComponentFixture<GridSearchComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GridSvgComponent ]
+      declarations: [ GridSearchComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GridSvgComponent);
+    fixture = TestBed.createComponent(GridSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {SvgLine} from "../../model/svgLine";
-import {Sorter} from "../common/sorter";
-import {ColorAnimation} from "../../model/animation/colorAnimation";
-import {Animation} from "../../model/animation/animation";
+import {SvgLine} from "../../../model/svgLine";
+import {Sorter} from "../sorter";
+import {ColorAnimation} from "../../../model/animation/colorAnimation";
+import {Animation} from "../../../model/animation/animation";
 
 @Injectable({
   providedIn: 'root'

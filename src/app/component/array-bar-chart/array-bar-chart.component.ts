@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {SvgLine} from "../../model/svgLine";
-import {Observable, Subject, Subscription} from "rxjs";
-import {SortingServiceFactoryService} from "../../service/common/sorting-service-factory.service";
-import {Sorter} from "../../service/common/sorter";
+import {Observable, Subscription} from "rxjs";
+import {SortingServiceFactoryService} from "../../service/sorting/sorting-service-factory.service";
+import {Sorter} from "../../service/sorting/sorter";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
-import {AnimationServiceService} from "../../service/common/animation-service.service";
+import {AnimationServiceService} from "../../service/animation-service.service";
 
 
 @Component({
@@ -14,7 +14,7 @@ import {AnimationServiceService} from "../../service/common/animation-service.se
   styleUrls: ['./array-bar-chart.component.scss'],
 })
 
-export class ArrayBarChartComponent implements OnInit {
+export class ArrayBarChartComponent implements OnInit, OnDestroy {
 
   @Input()
   svgArray: Array<SvgLine> = new Array<SvgLine>();
@@ -42,12 +42,11 @@ export class ArrayBarChartComponent implements OnInit {
 
   private startSorting(playSortingEvent : PlaySortingEvent) {
     if (playSortingEvent.status === AnimationStatus.FINISHED){
-      console.log("already sorted!")
     }
     if (playSortingEvent.status === AnimationStatus.STOPPED) {
       this.sorter = this.sortingServiceFactory.getSorter(playSortingEvent.algorithm)
       let animations = this.sorter?.sort(this.svgArray);
-      this.animationService.executeAnimations(this.svgArray, animations, this.velocity)
+      this.animationService.executeSortingAnimations(this.svgArray, animations, this.velocity)
     }
     if (playSortingEvent.status === AnimationStatus.PAUSED) {
       this.animationService.resumeAnimations();

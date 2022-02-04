@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-search-visualizer',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchVisualizerComponent implements OnInit {
 
+  resetSubject : Subject<void> = new Subject<void>()
+  startSubject: Subject<void> = new Subject<void>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  reset() {
+    this.resetSubject.next();
+  }
+
+  onPlayClicked() {
+    this.startSubject.next();
+  }
 }

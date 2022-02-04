@@ -1,1 +1,58 @@
-<p>search-visualizer works!</p>
+<div class="header">
+  <div class="legend-wrapper">
+    <div class="icon-legend-wrapper">
+      <div class="legend-item-wrapper">
+        <mat-icon class="legend">keyboard_arrow_right</mat-icon>
+        <mat-label>Start Node</mat-label>
+      </div>
+      <div class="legend-item-wrapper">
+        <mat-icon class="legend">star</mat-icon>
+        <mat-label>Target Node</mat-label>
+      </div>
+      <div class="legend-item-wrapper">
+        <mat-icon class="legend">priority_high</mat-icon>
+        <mat-label>Constraint Node</mat-label>
+      </div>
+    </div>
+    <div class="color-legend-wrapper">
+      <div class="legend-item-wrapper">
+        <div class="icon" id="unvisited-icon"></div>
+        <mat-label>Unvisited Node</mat-label>
+      </div>
+      <div class="legend-item-wrapper">
+        <div class="icon" id="visited-icon"></div>
+        <mat-label>Visited Node</mat-label>
+      </div>
+    </div>
+    <div class="color-legend-wrapper">
+      <div class="legend-item-wrapper">
+        <div class="icon" id="path-icon"></div>
+        <mat-label>Shortest-Path Node</mat-label>
+      </div>
+      <div class="legend-item-wrapper">
+        <div class="icon" id="wall-icon"></div>
+        <mat-label>Wall Node</mat-label>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-wrapper">
+    <button mat-raised-button (click)="reset()">Clear</button>
+
+    <div class="button-wrapper">
+      <button id="play-button"  (click)="onPlayClicked()">
+        <mat-icon class="play">play_circle_outline</mat-icon>
+      </button>
+<!--      <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">-->
+<!--        <mat-icon class="big">pause_circle_outline</mat-icon>-->
+<!--      </button>-->
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <app-grid-svg [resetEvent]="resetSubject.asObservable()"
+                [startEvent]="startSubject.asObservable()"></app-grid-svg>
+</div>
+

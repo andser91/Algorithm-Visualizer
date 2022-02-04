@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Sorter} from "./sorter";
-import {Algorithm} from "../../model/algorithm";
-import {BubbleSortService} from "../bubbleSort/bubble-sort.service";
-import {SelectionSortService} from "../selectionSort/selection-sort.service";
-import {InsertionSortService} from "../insertionSort/insertion-sort.service";
-import {MergeSortService} from "../mergeSort/merge-sort.service";
-import {QuickSortService} from "../quickSort/quick-sort.service";
-import {ShakerSortService} from "../shakerSort/shaker-sort.service";
+import {SortingAlgorithm} from "../../model/sortingAlgorithm";
+import {BubbleSortService} from "./bubbleSort/bubble-sort.service";
+import {SelectionSortService} from "./selectionSort/selection-sort.service";
+import {InsertionSortService} from "./insertionSort/insertion-sort.service";
+import {MergeSortService} from "./mergeSort/merge-sort.service";
+import {QuickSortService} from "./quickSort/quick-sort.service";
+import {ShakerSortService} from "./shakerSort/shaker-sort.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,24 +21,24 @@ export class SortingServiceFactoryService {
               private shakerSortService : ShakerSortService) {
   }
 
-  getSorter(algorithm: Algorithm): Sorter {
+  getSorter(algorithm: SortingAlgorithm): Sorter {
     switch (algorithm) {
-      case Algorithm.BUBBLE_SORT : {
+      case SortingAlgorithm.BUBBLE_SORT : {
         return new BubbleSortService();
       }
-      case Algorithm.SELECTION_SORT : {
+      case SortingAlgorithm.SELECTION_SORT : {
         return this.selectionSortService
       }
-      case Algorithm.MERGE_SORT : {
+      case SortingAlgorithm.MERGE_SORT : {
         return this.mergeSortService
       }
-      case Algorithm.INSERTION_SORT : {
+      case SortingAlgorithm.INSERTION_SORT : {
         return this.insertionSortService
       }
-      case Algorithm.QUICK_SORT : {
+      case SortingAlgorithm.QUICK_SORT : {
         return this.quickSortService
       }
-      case Algorithm.SHAKER_SORT : {
+      case SortingAlgorithm.SHAKER_SORT : {
         return this.shakerSortService
       }
     }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
 import {Subject} from "rxjs";
-import {Algorithm} from "../../model/algorithm";
+import {SortingAlgorithm} from "../../model/sortingAlgorithm";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
 import {PlaySortingEvent} from "../../event/playSortingEvent";
 
@@ -15,8 +15,8 @@ export class SortingVisualizerComponent implements OnInit {
   array: Array<number> = new Array<number>();
   size: number = 100;
   velocity: number = 10;
-  algorithms: Array<Algorithm> = Object.values(Algorithm)
-  selectedAlgorithm: Algorithm = Algorithm.BUBBLE_SORT;
+  algorithms: Array<SortingAlgorithm> = Object.values(SortingAlgorithm)
+  selectedAlgorithm: SortingAlgorithm = SortingAlgorithm.BUBBLE_SORT;
   startSubject: Subject<PlaySortingEvent> = new Subject<PlaySortingEvent>();
   resetSubject: Subject<void> = new Subject<void>()
   playButtonClass: string = "showed"

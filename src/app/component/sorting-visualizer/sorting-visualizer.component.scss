@@ -11,14 +11,15 @@
   justify-content: center;
   height: 100px;
   padding: 0 100px;
-  background-color: #3f51b5;
+  background-color: var(--primary-color);
   margin-bottom: 20px;
 }
 
-mat-slider {
+::ng-deep mat-slider {
   width: 200px;
   margin: 0 50px;
   padding: 0;
+  color: var(--secondary-color) !important;
 }
 
 mat-select {
@@ -27,7 +28,7 @@ mat-select {
 }
 
 ::ng-deep .mat-select-value{
-  color: #ff4081 !important;
+  color:  var(--secondary-color) !important;
 }
 
 .container {
@@ -36,8 +37,8 @@ mat-select {
   justify-content: center;
 }
 
-button{
-  background-color: #ff4081;
+button {
+  background-color: var(--secondary-color) !important;
   color: white;
   padding: 0;
   display: flex;
@@ -47,18 +48,21 @@ button{
   margin-right: 5px;
 }
 
+
+
 button.hidden{
   display: none;
 }
 
 mat-label {
   font-size: 20px;
-  color: #ff4081;
+  color:  var(--secondary-color);
   text-align: center;
+  display: block;
 }
 
 .mat-select-value, mat-select  span, mat-option{
-  color: #ff4081;
+  color:  var(--secondary-color);
 }
 
 mat-icon{
@@ -68,5 +72,17 @@ mat-icon{
 
 .button-wrapper{
   margin-left: 150px;
+}
+
+#play-button, #pause-button{
+  background-color: var(--secondary-color) !important;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  border-color: transparent;
+}
+
+mat-icon.play:hover{
+  cursor: pointer;
 }
 

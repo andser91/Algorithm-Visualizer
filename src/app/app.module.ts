@@ -13,7 +13,7 @@ import { MatButtonModule} from "@angular/material/button";
 import {SvgBarPipe} from "./pipe/svgBarPipe";
 import {MatIconModule} from "@angular/material/icon";
 import { SearchVisualizerComponent } from './component/search-visualizer/search-visualizer.component';
-import { GridSvgComponent } from './component/grid-svg/grid-svg.component';
+import { GridSearchComponent } from './component/grid-search/grid-search.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { GridSvgComponent } from './component/grid-svg/grid-svg.component';
     ArrayBarChartComponent,
     SvgBarPipe,
     SearchVisualizerComponent,
-    GridSvgComponent
+    GridSearchComponent
   ],
   imports: [
     BrowserModule,
