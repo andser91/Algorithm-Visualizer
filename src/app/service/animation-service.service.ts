@@ -1,8 +1,9 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Timer} from "../model/timer";
 import {Animation} from "../model/animation/animation";
-import {TerminationAnimation} from "../model/animation/terminationAnimation";
 import {SvgLine} from "../model/svgLine";
+import {TerminationPathAnimation} from "../model/animation/terminationPathAnimation";
+import {TerminationSortingAnimation} from "../model/animation/terminationSortingAnimation";
 
 @Injectable({
   providedIn: 'root'
@@ -25,23 +26,23 @@ export class AnimationServiceService {
     }
 
     this.timers.push(new Timer(() => {
-      new TerminationAnimation(this, array).animate();
+      new TerminationSortingAnimation(this, array).animate();
       this.animationFinishedEvent.emit();
     }, 25000 - velocity * 1000));
   }
 
   executeSearchAnimations(animations: Array<Animation>) {
-    for (let i = 0; i < animations.length; i++) {
+    for (let i = 0 ; i < animations.length; i++) {
       let timer = new Timer(() => {
         animations[i].animate();
       }, i * 10)
       this.timers.push(timer);
     }
 
-    // this.timers.push(new Timer(() => {
-    //   new TerminationAnimation(this, array).animate();
-    //   this.animationFinishedEvent.emit();
-    // }, 25000 - velocity * 1000));
+    this.timers.push(new Timer(() => {
+      new TerminationPathAnimation(this).animate();
+      this.animationFinishedEvent.emit();
+    }, animations.length * 10));
   }
 
   executeInstantSearchAnimations(animations: Array<Animation>) {

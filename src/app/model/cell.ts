@@ -10,6 +10,7 @@ export class Cell{
   isVisited : boolean;
 
   cssClass : string
+  previousCssClass : string
   distance : number;
   previousNode : Cell | null
 
@@ -26,6 +27,13 @@ export class Cell{
     this.isVisited = false
     this.distance = Number.MAX_VALUE;
     this.previousNode = null
+    this.previousCssClass = cssClass
+  }
+
+  setCssClass(cssClass : string){
+    let temp = this.cssClass
+    this.previousCssClass = this.cssClass;
+    this.cssClass = cssClass
   }
 
   public isIcon(){
@@ -34,12 +42,12 @@ export class Cell{
 
   public toggleWall(){
     if (!this.isIcon() && this.cssClass !== "wall") {
-      this.isWall = true;
-      this.cssClass = "wall"
+      this.isWall = true
+      this.setCssClass("wall")
     }
     else {
-      this.isWall = false;
-      this.cssClass = "unvisited"
+      this.isWall = false
+      this.setCssClass(this.previousCssClass)
     }
   }
 }

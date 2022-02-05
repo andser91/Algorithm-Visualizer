@@ -1,7 +1,7 @@
 import {Cell} from "../cell";
 import {Animation} from "./animation";
 
-export class CssClassAnimation extends Animation{
+export class CssClassAnimation extends Animation {
   private readonly cell : Cell
   private readonly cssClass : string
 
@@ -13,6 +13,6 @@ export class CssClassAnimation extends Animation{
   }
 
   animate(): void {
-    this.cell.cssClass = this.cssClass;
+    this.cell.setCssClass(this.cssClass);
   }
 }

@@ -52,7 +52,8 @@
 
 
 <div class="container">
-  <app-grid-svg [resetEvent]="resetSubject.asObservable()"
+  <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished()"
+                [resetEvent]="resetSubject.asObservable()"
                 [startEvent]="startSubject.asObservable()"></app-grid-svg>
 </div>
 

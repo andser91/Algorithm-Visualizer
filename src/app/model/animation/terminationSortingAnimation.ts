@@ -2,7 +2,7 @@ import {Animation} from "./animation";
 import {SvgLine} from "../svgLine";
 import {AnimationServiceService} from "../../service/animation-service.service";
 
-export class TerminationAnimation extends Animation {
+export class TerminationSortingAnimation extends Animation {
 
   private animationService: AnimationServiceService;
   private readonly array: Array<SvgLine>;

@@ -25,25 +25,25 @@ export class SearchVisualizerComponent implements OnInit {
   reset() {
     this.playButtonClass = "showed"
     this.pauseButtonClass = "hidden"
-    this.status = AnimationStatus.STOPPED;
     this.resetSubject.next();
   }
 
   onPlayClicked() {
-    if (this.status !== AnimationStatus.FINISHED) {
       this.startSubject.next(new PlayShortesPathEvent(ShortestPathAlgorithm.BFS, this.status));
-      this.status = AnimationStatus.PLAYING;
       this.playButtonClass = "hidden"
       this.pauseButtonClass = "showed"
-    }
   }
 
   onPauseClicked() {
-    if (this.status !== AnimationStatus.FINISHED) {
       this.startSubject.next(new PlayShortesPathEvent(ShortestPathAlgorithm.BFS, this.status));
-      this.status = AnimationStatus.PAUSED;
       this.playButtonClass = "showed"
       this.pauseButtonClass = "hidden"
-    }
+  }
+
+  onAnimationFinished() {
+    this.pauseButtonClass = "hidden";
+    this.playButtonClass = "showed";
+    //serve per disabilitare gli input dell'algoritmo
+    // this.animationCompleted = true
   }
 }
