@@ -40,12 +40,12 @@
     <button mat-raised-button (click)="reset()">Clear</button>
 
     <div class="button-wrapper">
-      <button id="play-button"  (click)="onPlayClicked()">
+      <button id="play-button" [class]="playButtonClass" (click)="onPlayClicked()">
         <mat-icon class="play">play_circle_outline</mat-icon>
       </button>
-<!--      <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">-->
-<!--        <mat-icon class="big">pause_circle_outline</mat-icon>-->
-<!--      </button>-->
+      <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">
+        <mat-icon class="pause">pause_circle_outline</mat-icon>
+      </button>
     </div>
   </div>
 </div>

@@ -5,6 +5,8 @@ import {Observable, Subscription} from "rxjs";
 import {ShortestPathServiceFactoryService} from "../../service/shortestPath/shortest-path-service-factory.service";
 import {ShortestPathAlgorithm} from "../../model/shortestPathAlgorithm";
 import {AnimationServiceService} from "../../service/animation-service.service";
+import {AnimationStatus} from "../../model/animation/AnimationStatus";
+import {PlayShortesPathEvent} from "../../event/playShortesPathEvent";
 
 @Component({
   selector: 'app-grid-svg',
@@ -18,29 +20,37 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   private startSelected: boolean = false;
   private targetSelected: boolean = false;
   private constraintSelected: boolean = false;
-  private startCell : any = null
-  private targetCell : any = null
-  private constraintCell : any = null
+  private startCell: any = null
+  private targetCell: any = null
+  private constraintCell: any = null
 
   @Input() resetEvent: Observable<void> | undefined;
   private resetEventSubscription: Subscription | undefined;
-  @Input() startEvent: Observable<void> | undefined;
+  @Input() startEvent: Observable<PlayShortesPathEvent> | undefined;
   private startEventSubscription: Subscription | undefined;
 
-  constructor(private shortestPathServiceFactory : ShortestPathServiceFactoryService,
-              private animationService : AnimationServiceService) {
+  constructor(private shortestPathServiceFactory: ShortestPathServiceFactoryService,
+              private animationService: AnimationServiceService) {
   }
 
   ngOnInit(): void {
     this.resetEventSubscription = this.resetEvent?.subscribe(() => this.reset())
-    this.startEventSubscription = this.startEvent?.subscribe(() => this.start())
+    this.startEventSubscription = this.startEvent?.subscribe((playShortesPathEvent: PlayShortesPathEvent) => this.start(playShortesPathEvent))
     this.generateGrid();
   }
 
-  private start() {
-    let pathFinder = this.shortestPathServiceFactory.getPathFinder(ShortestPathAlgorithm.BFS)
-    let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
-    this.animationService.executeSearchAnimations(animations)
+  private start(playShortesPathEvent: PlayShortesPathEvent) {
+    if (playShortesPathEvent.status === AnimationStatus.STOPPED) {
+      let pathFinder = this.shortestPathServiceFactory.getPathFinder(ShortestPathAlgorithm.BFS)
+      let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
+      this.animationService.executeSearchAnimations(animations)
+    }
+    if (playShortesPathEvent.status === AnimationStatus.PAUSED) {
+      this.animationService.resumeAnimations()
+    }
+    if (playShortesPathEvent.status === AnimationStatus.PLAYING) {
+      this.animationService.pauseAnimations()
+    }
   }
 
   private reset() {
@@ -71,12 +81,12 @@ export class GridSearchComponent implements OnInit, OnDestroy {
 
   private generateCell(row: number, col: number): Cell {
     if (row === 14 && col === 16) {
-      let cell = new Cell(row, col,  true, false, false, false, "unvisited");
+      let cell = new Cell(row, col, true, false, false, false, "unvisited");
       this.startCell = cell
       return cell
     }
     if (row === 14 && col === 33) {
-      let cell = new Cell(row, col,  false, true, false, false, "unvisited");
+      let cell = new Cell(row, col, false, true, false, false, "unvisited");
       this.targetCell = cell
       return cell
     }

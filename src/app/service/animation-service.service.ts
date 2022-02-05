@@ -44,6 +44,13 @@ export class AnimationServiceService {
     // }, 25000 - velocity * 1000));
   }
 
+  executeInstantSearchAnimations(animations: Array<Animation>) {
+    for (let i = 0; i < animations.length; i++) {
+      animations[i].animate();
+    }
+  }
+
+
   pauseAnimations() {
     for (let i = 0; i < this.timers.length; i++) {
       this.timers[i].pause();

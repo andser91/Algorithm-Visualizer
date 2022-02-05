@@ -83,6 +83,10 @@ button {
   margin-right: 10px;
 }
 
+button.hidden{
+  display: none;
+}
+
 #play-button, #pause-button{
   background-color: var(--secondary-color) !important;
   width: 60px;
@@ -91,12 +95,12 @@ button {
   border-color: transparent;
 }
 
-mat-icon.play{
+mat-icon.play, mat-icon.pause{
   transform: scale(2.5);
   color: white;
 }
 
-mat-icon.play:hover{
+mat-icon.play:hover, mat-icon.pause:hover{
   cursor: pointer;
 }
 

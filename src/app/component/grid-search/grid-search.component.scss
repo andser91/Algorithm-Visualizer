@@ -57,12 +57,13 @@ mat-icon{
   display: inline;
   float: left;
   text-align: center;
-  animation-name: visitedAnimation;
-  animation-duration: 1s;
-  animation-timing-function: ease-out;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
+  background-color: rgba(0, 190, 218, 0.75);
+  //animation-name: visitedAnimation;
+  //animation-duration: 1s;
+  //animation-timing-function: ease-out;
+  //animation-iteration-count: 1;
+  //animation-fill-mode: forwards;
+  //animation-play-state: running;
 }
 
 .shortestPath{
@@ -74,12 +75,13 @@ mat-icon{
   display: inline;
   float: left;
   text-align: center;
-  animation-name: shortestPathAnimation;
-  animation-duration: 2s;
-  animation-timing-function: ease-out;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
+  background-color: rgb(255, 254, 106);
+  //animation-name: shortestPathAnimation;
+  //animation-duration: 2s;
+  //animation-timing-function: ease-out;
+  //animation-iteration-count: 1;
+  //animation-fill-mode: forwards;
+  //animation-play-state: running;
 }
 
 @keyframes wallAnimation {
