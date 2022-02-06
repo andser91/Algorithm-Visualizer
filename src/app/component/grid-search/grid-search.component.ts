@@ -102,7 +102,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private generateGrid() {
-    for (let row = 0; row < 30; row++) {
+    for (let row = 0; row < 20; row++) {
       let currentRow = []
       for (let col = 0; col < 50; col++) {
         currentRow.push(this.generateCell(row, col))
@@ -112,7 +112,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private reInitializeGrid() {
-    for (let row = 0; row < 30; row++) {
+    for (let row = 0; row < 20; row++) {
       for (let col = 0; col < 50; col++) {
         if (this.grid[row][col].cssClass === "visited" || this.grid[row][col].cssClass === "shortestPath") {
           this.grid[row][col].isVisited = false
@@ -123,12 +123,12 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private generateCell(row: number, col: number): Cell {
-    if (row === 14 && col === 16) {
+    if (row === 10 && col === 19) {
       let cell = new Cell(row, col, true, false, false, false, "unvisited");
       this.startCell = cell
       return cell
     }
-    if (row === 14 && col === 33) {
+    if (row === 10 && col === 39) {
       let cell = new Cell(row, col, false, true, false, false, "unvisited");
       this.targetCell = cell
       return cell
@@ -147,7 +147,9 @@ export class GridSearchComponent implements OnInit, OnDestroy {
       }
     }
     if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
-      cell.toggleWall()
+      if (this.status !== AnimationStatus.PAUSED) {
+        cell.toggleWall()
+      }
     }
   }
 
@@ -159,7 +161,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   onCellMouseEnter(cell: Cell) {
-    if (this.status === AnimationStatus.FINISHED){
+    if (this.status === AnimationStatus.FINISHED) {
       if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
         cell.toggleWall()
         this.reInitializeGrid()
@@ -168,35 +170,49 @@ export class GridSearchComponent implements OnInit, OnDestroy {
       }
     }
     if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
-      cell.toggleWall()
+      if (this.status !== AnimationStatus.PAUSED) {
+        cell.toggleWall()
+      }
     }
     if (this.startSelected) {
-      cell.isStart = true
-      this.startCell = cell;
-      cell.toggleWall()
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isStart = true
+        this.startCell = cell;
+        cell.toggleWall()
+      }
 
     }
     if (this.targetSelected) {
-      cell.isTarget = true
-      this.targetCell = cell
-      cell.toggleWall()
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isTarget = true
+        this.targetCell = cell
+        cell.toggleWall()
+      }
     }
     if (this.constraintSelected) {
-      cell.isConstraint = true
-      this.constraintCell = cell
-      cell.toggleWall()
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isConstraint = true
+        this.constraintCell = cell
+        cell.toggleWall()
+      }
     }
   }
 
   onCellMouseLeave(cell: Cell) {
     if (this.startSelected) {
-      cell.isStart = false
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isStart = false
+      }
     }
     if (this.targetSelected) {
-      cell.isTarget = false
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isTarget = false
+      }
     }
     if (this.constraintSelected) {
-      cell.isConstraint = false
+      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+        cell.isConstraint = false
+      }
     }
   }
 

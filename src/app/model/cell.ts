@@ -1,4 +1,3 @@
-import {Constant} from "../util/constant";
 
 export class Cell{
   row : number;
