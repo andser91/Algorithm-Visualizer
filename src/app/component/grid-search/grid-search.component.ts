@@ -181,8 +181,11 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     }
     if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
       if (this.status === AnimationStatus.STOPPED) {
-        cell.toggleWall()
-        cell.weight = 1
+        if (cell.weight !== 1) {
+          cell.weight = 1
+        } else {
+          cell.toggleWall()
+        }
       }
     }
     if (this.startSelected) {
