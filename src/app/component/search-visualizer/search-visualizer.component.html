@@ -63,10 +63,10 @@
     </div>
 
     <div class="button-wrapper">
-      <button id="play-button" [class]="playButtonClass" (click)="onPlayClicked()">
+      <button id="play-button" [class]="playButtonClass" appDebounceClick [debounceTime]="0" (debounceClick)="onPlayClicked()">
         <mat-icon class="play">play_circle_outline</mat-icon>
       </button>
-      <button id="pause-button" [class]="pauseButtonClass" mat-fab (click)="onPauseClicked()">
+      <button id="pause-button" [class]="pauseButtonClass" appDebounceClick [debounceTime]="0" (debounceClick)="onPauseClicked()">
         <mat-icon class="pause">pause_circle_outline</mat-icon>
       </button>
     </div>

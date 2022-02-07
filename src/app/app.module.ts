@@ -15,6 +15,7 @@ import {MatIconModule} from "@angular/material/icon";
 import { SearchVisualizerComponent } from './component/search-visualizer/search-visualizer.component';
 import { GridSearchComponent } from './component/grid-search/grid-search.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {DebounceClickDirective} from "./directive/debounce-click.directive";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ArrayBarChartComponent,
     SvgBarPipe,
     SearchVisualizerComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    DebounceClickDirective
   ],
     imports: [
         BrowserModule,
