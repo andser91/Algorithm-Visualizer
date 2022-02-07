@@ -3,7 +3,7 @@
     <div *ngFor="let cell of grid[i]; index as j" [id]="i+'-'+j"
          [class]="cell.cssClass"
          (mousedown)="onCellMouseDown($event, cell)"
-         (mouseup)="onCellMouseUp()"
+         (mouseup)="onCellMouseUp($event)"
          (mouseenter)="onCellMouseEnter(cell)"
          (mouseleave)="onCellMouseLeave(cell)"
          (contextmenu)="onRightClick($event, cell)">

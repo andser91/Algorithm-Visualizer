@@ -1,23 +1,24 @@
-import {Cell} from "../../model/cell";
-import {Animation} from "../../model/animation/animation";
-import {CssClassAnimation} from "../../model/animation/cssClassAnimation";
+import {Cell} from "../../../model/cell";
+import {Animation} from "../../../model/animation/animation";
+import {CssClassAnimation} from "../../../model/animation/cssClassAnimation";
+import {GraphAlgorithmService} from "../graphAlgorithmService";
 
-export abstract class PathFinder{
+export abstract class PathFinder extends GraphAlgorithmService {
 
-  abstract find(graph : Cell[][], source: Cell, targetCell: Cell) : Array<Animation>;
-
-  protected findShortestPath(source : Cell, target: Cell, animations: Animation[]) {
+  protected findShortestPath(source: Cell, target: Cell, animations: Animation[]) {
     let path = new Array<Cell>()
     let temp = target
     path.push(target);
-    while (temp.previousNode != null){
+    while (temp.previousNode != null) {
       path.push(temp!)
       temp = temp.previousNode!
     }
     path.push(source)
 
-    for(let i= path.length -1; i>=0; i--){
-      animations.push(new CssClassAnimation(path[i], "shortestPath"))
+    if (target.previousNode != null) {
+      for (let i = path.length - 1; i >= 0; i--) {
+        animations.push(new CssClassAnimation(path[i], "shortestPath"))
+      }
     }
   }
 

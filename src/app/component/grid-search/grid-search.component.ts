@@ -2,11 +2,12 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {Cell} from "../../model/cell";
 import {MouseStatus} from "../../util/mouseStatus";
 import {Observable, Subscription} from "rxjs";
-import {ShortestPathServiceFactoryService} from "../../service/shortestPath/shortest-path-service-factory.service";
 import {AnimationServiceService} from "../../service/animation-service.service";
 import {AnimationStatus} from "../../model/animation/AnimationStatus";
 import {PlayShortesPathEvent} from "../../event/playShortesPathEvent";
 import {ShortestPathAlgorithm} from "../../model/shortestPathAlgorithm";
+import {GraphAlgorithmFactoryService} from "../../service/graph/graph-algorithm-factory.service";
+import {Constant} from "../../util/constant";
 
 @Component({
   selector: 'app-grid-svg',
@@ -39,7 +40,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   private status: AnimationStatus = AnimationStatus.STOPPED;
 
 
-  constructor(private shortestPathServiceFactory: ShortestPathServiceFactoryService,
+  constructor(private graphAlgorithmFactory: GraphAlgorithmFactoryService,
               private animationService: AnimationServiceService) {
   }
 
@@ -51,8 +52,8 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private reExecuteAlgorithm() {
-    let pathFinder = this.shortestPathServiceFactory.getPathFinder(this.algorithm!)
-    let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
+    let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
+    let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
     this.animationService.executeInstantSearchAnimations(animations)
   }
 
@@ -61,14 +62,14 @@ export class GridSearchComponent implements OnInit, OnDestroy {
       case AnimationStatus.FINISHED: {
         this.reInitializeGrid()
         this.status = AnimationStatus.PLAYING;
-        let pathFinder = this.shortestPathServiceFactory.getPathFinder(this.algorithm)
-        let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
+        let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
+        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
         this.animationService.executeSearchAnimations(animations, this.velocity)
         break;
       }
       case AnimationStatus.STOPPED: {
-        let pathFinder = this.shortestPathServiceFactory.getPathFinder(this.algorithm)
-        let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
+        let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
+        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
         this.animationService.executeSearchAnimations(animations, this.velocity)
         this.status = AnimationStatus.PLAYING;
         break
@@ -104,9 +105,9 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private generateGrid() {
-    for (let row = 0; row < 20; row++) {
+    for (let row = 0; row < Constant.ROWS; row++) {
       let currentRow = []
-      for (let col = 0; col < 50; col++) {
+      for (let col = 0; col < Constant.COLUMNS; col++) {
         currentRow.push(this.generateCell(row, col))
       }
       this.grid.push(currentRow);
@@ -114,12 +115,16 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private reInitializeGrid() {
-    for (let row = 0; row < 20; row++) {
-      for (let col = 0; col < 50; col++) {
+    for (let row = 0; row < Constant.ROWS; row++) {
+      for (let col = 0; col < Constant.COLUMNS; col++) {
         this.grid[row][col].previousNode = null;
         this.grid[row][col].distance = Number.MAX_VALUE;
         if (this.grid[row][col].cssClass === "visited" || this.grid[row][col].cssClass === "shortestPath") {
           this.grid[row][col].isVisited = false
+          this.grid[row][col].cssClass = "unvisited"
+        }
+        if (this.algorithm === ShortestPathAlgorithm.RECURSIVE_DIVISION){
+          this.grid[row][col].isWall = false
           this.grid[row][col].cssClass = "unvisited"
         }
       }
@@ -127,12 +132,12 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private generateCell(row: number, col: number): Cell {
-    if (row === 10 && col === 19) {
+    if (row === 12 && col === 19) {
       let cell = new Cell(row, col, true, false, false, false, "unvisited");
       this.startCell = cell
       return cell
     }
-    if (row === 10 && col === 39) {
+    if (row === 12 && col === 39) {
       let cell = new Cell(row, col, false, true, false, false, "unvisited");
       this.targetCell = cell
       return cell
@@ -155,8 +160,8 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCellMouseUp() {
-    if (this.status === AnimationStatus.FINISHED) {
+  onCellMouseUp(event : MouseEvent) {
+    if (this.status === AnimationStatus.FINISHED && event.button === 0) {
       this.reInitializeGrid()
       this.reExecuteAlgorithm()
     }
@@ -167,8 +172,8 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   onCellMouseEnter(cell: Cell) {
-    if (this.status === AnimationStatus.FINISHED) {
-      if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
+    if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
+      if (this.status === AnimationStatus.FINISHED) {
         if (cell.weight !== 1) {
           cell.weight = 1
         } else {
@@ -178,8 +183,6 @@ export class GridSearchComponent implements OnInit, OnDestroy {
         this.reExecuteAlgorithm()
         return
       }
-    }
-    if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
       if (this.status === AnimationStatus.STOPPED) {
         if (cell.weight !== 1) {
           cell.weight = 1
@@ -252,7 +255,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   onRightClick($event: MouseEvent, cell: Cell) {
-    if (this.isAlgorithmWeighted(this.algorithm)) {
+    if (this.isAlgorithmWeightedSelected()) {
       if (this.status === AnimationStatus.FINISHED && !cell.isWall) {
         cell.weight++
         this.reInitializeGrid()
@@ -265,7 +268,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     return false
   }
 
-  isAlgorithmWeighted(algorithm: ShortestPathAlgorithm): boolean {
-    return algorithm === ShortestPathAlgorithm.DIJKSTRA;
+  isAlgorithmWeightedSelected(): boolean {
+    return this.algorithm === ShortestPathAlgorithm.DIJKSTRA;
   }
 }

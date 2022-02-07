@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import {Cell} from "../../../model/cell";
+import {Cell} from "../../../../model/cell";
 import {PathFinder} from "../pathFinder";
-import {Animation} from "../../../model/animation/animation";
-import {CssClassAnimation} from "../../../model/animation/cssClassAnimation";
+import {Animation} from "../../../../model/animation/animation";
+import {CssClassAnimation} from "../../../../model/animation/cssClassAnimation";
+import {Constant} from "../../../../util/constant";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class DijkstraService extends PathFinder{
     super();
   }
 
-  find(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
+  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
     let animations = this.dijkstra(graph, source, target)
     this.findShortestPath(source, target, animations)
     return animations;
@@ -25,8 +26,8 @@ export class DijkstraService extends PathFinder{
     source.distance = 0;
     let vertex = []
 
-    for (let row = 0; row < 20; row++) {
-      for (let col = 0; col < 50; col++) {
+    for (let row = 0; row < Constant.ROWS; row++) {
+      for (let col = 0; col < Constant.COLUMNS; col++) {
         vertex.push(graph[row][col])
       }
     }

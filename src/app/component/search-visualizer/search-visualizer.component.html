@@ -74,7 +74,10 @@
 </div>
 
 <p [innerHTML]="algorithmDescription"></p>
-<p>The distance from start to target is <span *ngIf="distance!==0" id="distance" [innerHTML]="distance"></span></p>
+<p>The distance from start to target is
+  <span *ngIf="distance!==0 && distance<10000" class="distance" [innerHTML]="distance"></span>
+  <span *ngIf="animationCompleted && distance > 10000" class="distance">Unreachable!</span>
+</p>
 
 <div class="container">
   <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished($event)"

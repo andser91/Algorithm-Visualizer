@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {PathFinder} from "../pathFinder";
-import {Cell} from "../../../model/cell";
-import {Animation} from "../../../model/animation/animation";
-import {CssClassAnimation} from "../../../model/animation/cssClassAnimation";
+import {Cell} from "../../../../model/cell";
+import {Animation} from "../../../../model/animation/animation";
+import {CssClassAnimation} from "../../../../model/animation/cssClassAnimation";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class BfsService extends PathFinder {
     super();
   }
 
-  find(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
+  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
     let animations = this.bfs(graph, source, target)
     this.findShortestPath(source, target, animations)
     return animations;
