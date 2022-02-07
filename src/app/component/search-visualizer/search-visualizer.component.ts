@@ -24,16 +24,16 @@ export class SearchVisualizerComponent implements OnInit {
   velocity: number = 10;
   distance : number = 0
   algorithmToDescription = new Map<ShortestPathAlgorithm, string>()
-  algorithmDescription: string = "Breath-first Search is unweighted and guarantees the shortest path";
+  algorithmDescription: string = "Breath-first Search is <u>unweighted</u> and <u>guarantees</u> the shortest path";
 
   constructor() { }
 
 
 
   ngOnInit(): void {
-    this.algorithmToDescription.set(ShortestPathAlgorithm.BFS, "Breath-first Search is unweighted and guarantees the shortest path");
-    this.algorithmToDescription.set(ShortestPathAlgorithm.DFS, "Depth-first Search is unweighted and does not guarantee the shortest path!");
-    this.algorithmToDescription.set(ShortestPathAlgorithm.DIJKSTRA, "Dijkstra's Algorithm is weighted and guarantees the shortest path!");
+    this.algorithmToDescription.set(ShortestPathAlgorithm.BFS, "Breath-first Search is <u>unweighted</u> and <u>guarantees</u> the shortest path");
+    this.algorithmToDescription.set(ShortestPathAlgorithm.DFS, "Depth-first Search is <u>unweighted</u> and does <u>NOT guarantee</u> the shortest path!");
+    this.algorithmToDescription.set(ShortestPathAlgorithm.DIJKSTRA, "Dijkstra's Algorithm is <u>weighted</u> and <u>guarantees</u> the shortest path!");
   }
 
   reset() {

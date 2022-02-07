@@ -70,7 +70,7 @@
 </div>
 
 <p [innerHTML]="algorithmDescription"></p>
-<p>The minimum distance from start to target is <span *ngIf="distance!==0" id="distance" [innerHTML]="distance"></span></p>
+<p>The distance from start to target is <span *ngIf="distance!==0" id="distance" [innerHTML]="distance"></span></p>
 
 <div class="container">
   <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished($event)"

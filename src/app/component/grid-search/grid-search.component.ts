@@ -116,6 +116,8 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   private reInitializeGrid() {
     for (let row = 0; row < 20; row++) {
       for (let col = 0; col < 50; col++) {
+        this.grid[row][col].previousNode = null;
+        this.grid[row][col].distance = Number.MAX_VALUE;
         if (this.grid[row][col].cssClass === "visited" || this.grid[row][col].cssClass === "shortestPath") {
           this.grid[row][col].isVisited = false
           this.grid[row][col].cssClass = "unvisited"
@@ -145,8 +147,6 @@ export class GridSearchComponent implements OnInit, OnDestroy {
         if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
           cell.toggleWall()
           cell.weight = 1
-          this.reInitializeGrid()
-          this.reExecuteAlgorithm()
           return
         }
       }

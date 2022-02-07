@@ -7,7 +7,6 @@ export abstract class PathFinder{
   abstract find(graph : Cell[][], source: Cell, targetCell: Cell) : Array<Animation>;
 
   protected findShortestPath(source : Cell, target: Cell, animations: Animation[]) {
-    source.previousNode = null;
     let path = new Array<Cell>()
     let temp = target
     path.push(target);
