@@ -143,17 +143,13 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   onCellMouseDown(event: MouseEvent, cell: Cell) {
     if (event.button === 0) {
       this.mouseStatus = MouseStatus.DOWN;
-      if (this.status === AnimationStatus.FINISHED) {
-        if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
-          cell.toggleWall()
-          cell.weight = 1
-          return
-        }
-      }
       if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
-        if (this.status === AnimationStatus.STOPPED) {
-          cell.weight = 1
-          cell.toggleWall()
+        if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
+          if (cell.weight !== 1) {
+            cell.weight = 1
+          } else {
+            cell.toggleWall()
+          }
         }
       }
     }
@@ -173,8 +169,11 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   onCellMouseEnter(cell: Cell) {
     if (this.status === AnimationStatus.FINISHED) {
       if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
-        cell.toggleWall()
-        cell.weight = 1
+        if (cell.weight !== 1) {
+          cell.weight = 1
+        } else {
+          cell.toggleWall()
+        }
         this.reInitializeGrid()
         this.reExecuteAlgorithm()
         return
@@ -250,11 +249,20 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   onRightClick($event: MouseEvent, cell: Cell) {
-    if (this.algorithm === ShortestPathAlgorithm.DIJKSTRA) {
-      if (this.status === AnimationStatus.STOPPED &&!cell.isWall) {
+    if (this.isAlgorithmWeighted(this.algorithm)) {
+      if (this.status === AnimationStatus.FINISHED && !cell.isWall) {
+        cell.weight++
+        this.reInitializeGrid()
+        this.reExecuteAlgorithm()
+      }
+      if (this.status === AnimationStatus.STOPPED && !cell.isWall) {
         cell.weight++
       }
     }
     return false
+  }
+
+  isAlgorithmWeighted(algorithm: ShortestPathAlgorithm): boolean {
+    return algorithm === ShortestPathAlgorithm.DIJKSTRA;
   }
 }
