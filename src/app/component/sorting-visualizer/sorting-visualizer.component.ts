@@ -48,7 +48,7 @@ export class SortingVisualizerComponent implements OnInit {
   }
 
   velocitySliderChange(event: MatSliderChange) {
-    this.velocity = event.value || 5000;
+    this.velocity = event.value || 10;
   }
 
   onNewArrayClicked() {

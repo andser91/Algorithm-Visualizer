@@ -23,8 +23,11 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   private startCell: any = null
   private targetCell: any = null
   private constraintCell: any = null
-  private algorithm: ShortestPathAlgorithm | null = null
+  @Input()
+  algorithm: ShortestPathAlgorithm = ShortestPathAlgorithm.BFS
 
+  @Input()
+  velocity: number = 10;
   @Input() resetEvent: Observable<void> | undefined;
   private resetEventSubscription: Subscription | undefined;
   @Input() startEvent: Observable<PlayShortesPathEvent> | undefined;
@@ -32,7 +35,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   animationFinishedEvent: Observable<void> | undefined;
   animationFinishedEventSubscription: Subscription | undefined;
   @Output()
-  animationFinishedEventEmitter: EventEmitter<void> = new EventEmitter<void>();
+  animationFinishedEventEmitter: EventEmitter<number> = new EventEmitter<number>();
   private status: AnimationStatus = AnimationStatus.STOPPED;
 
 
@@ -54,20 +57,19 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   }
 
   private start(playShortestPathEvent: PlayShortesPathEvent) {
-    this.algorithm = playShortestPathEvent.algorithm
     switch (this.status) {
       case AnimationStatus.FINISHED: {
         this.reInitializeGrid()
         this.status = AnimationStatus.PLAYING;
         let pathFinder = this.shortestPathServiceFactory.getPathFinder(this.algorithm)
         let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
-        this.animationService.executeSearchAnimations(animations)
+        this.animationService.executeSearchAnimations(animations, this.velocity)
         break;
       }
       case AnimationStatus.STOPPED: {
         let pathFinder = this.shortestPathServiceFactory.getPathFinder(this.algorithm)
         let animations = pathFinder.find(this.grid, this.startCell, this.targetCell)
-        this.animationService.executeSearchAnimations(animations)
+        this.animationService.executeSearchAnimations(animations, this.velocity)
         this.status = AnimationStatus.PLAYING;
         break
       }
@@ -136,24 +138,32 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     return new Cell(row, col, false, false, false, false, "unvisited");
   }
 
-  onCellMouseDown(cell: Cell) {
-    this.mouseStatus = MouseStatus.DOWN;
-    if (this.status === AnimationStatus.FINISHED) {
-      if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
-        cell.toggleWall()
-        this.reInitializeGrid()
-        this.reExecuteAlgorithm()
-        return
+  onCellMouseDown(event: MouseEvent, cell: Cell) {
+    if (event.button === 0) {
+      this.mouseStatus = MouseStatus.DOWN;
+      if (this.status === AnimationStatus.FINISHED) {
+        if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
+          cell.toggleWall()
+          cell.weight = 1
+          this.reInitializeGrid()
+          this.reExecuteAlgorithm()
+          return
+        }
       }
-    }
-    if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
-      if (this.status !== AnimationStatus.PAUSED) {
-        cell.toggleWall()
+      if (!cell.isStart && !cell.isTarget && !cell.isConstraint) {
+        if (this.status === AnimationStatus.STOPPED) {
+          cell.weight = 1
+          cell.toggleWall()
+        }
       }
     }
   }
 
-  onCellMouseUp(cell: Cell) {
+  onCellMouseUp() {
+    if (this.status === AnimationStatus.FINISHED) {
+      this.reInitializeGrid()
+      this.reExecuteAlgorithm()
+    }
     this.mouseStatus = MouseStatus.UP
     this.startSelected = false;
     this.targetSelected = false;
@@ -164,53 +174,52 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     if (this.status === AnimationStatus.FINISHED) {
       if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
         cell.toggleWall()
+        cell.weight = 1
         this.reInitializeGrid()
         this.reExecuteAlgorithm()
         return
       }
     }
     if (this.mouseStatus === MouseStatus.DOWN && !this.startSelected && !this.targetSelected && !this.constraintSelected) {
-      if (this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED) {
         cell.toggleWall()
+        cell.weight = 1
       }
     }
     if (this.startSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isStart = true
         this.startCell = cell;
-        cell.toggleWall()
       }
 
     }
     if (this.targetSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isTarget = true
         this.targetCell = cell
-        cell.toggleWall()
       }
     }
     if (this.constraintSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isConstraint = true
         this.constraintCell = cell
-        cell.toggleWall()
       }
     }
   }
 
   onCellMouseLeave(cell: Cell) {
     if (this.startSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isStart = false
       }
     }
     if (this.targetSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isTarget = false
       }
     }
     if (this.constraintSelected) {
-      if (this.status !== AnimationStatus.FINISHED && this.status !== AnimationStatus.PAUSED) {
+      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
         cell.isConstraint = false
       }
     }
@@ -237,6 +246,15 @@ export class GridSearchComponent implements OnInit, OnDestroy {
 
   private sendFinishEvent() {
     this.status = AnimationStatus.FINISHED;
-    this.animationFinishedEventEmitter.emit();
+    this.animationFinishedEventEmitter.emit(this.targetCell.distance);
+  }
+
+  onRightClick($event: MouseEvent, cell: Cell) {
+    if (this.algorithm === ShortestPathAlgorithm.DIJKSTRA) {
+      if (this.status === AnimationStatus.STOPPED &&!cell.isWall) {
+        cell.weight++
+      }
+    }
+    return false
   }
 }

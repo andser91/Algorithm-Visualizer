@@ -14,6 +14,7 @@ import {SvgBarPipe} from "./pipe/svgBarPipe";
 import {MatIconModule} from "@angular/material/icon";
 import { SearchVisualizerComponent } from './component/search-visualizer/search-visualizer.component';
 import { GridSearchComponent } from './component/grid-search/grid-search.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -24,16 +25,17 @@ import { GridSearchComponent } from './component/grid-search/grid-search.compone
     SearchVisualizerComponent,
     GridSearchComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSliderModule,
-    FormsModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSliderModule,
+        FormsModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCheckboxModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

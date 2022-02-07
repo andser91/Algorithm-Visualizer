@@ -2,12 +2,15 @@
   <div class="row" *ngFor="let row of grid; index as i">
     <div *ngFor="let cell of grid[i]; index as j" [id]="i+'-'+j"
          [class]="cell.cssClass"
-         (mousedown)="onCellMouseDown(cell)"
-         (mouseup)="onCellMouseUp(cell)"
+         (mousedown)="onCellMouseDown($event, cell)"
+         (mouseup)="onCellMouseUp()"
          (mouseenter)="onCellMouseEnter(cell)"
-         (mouseleave)="onCellMouseLeave(cell)">
+         (mouseleave)="onCellMouseLeave(cell)"
+         (contextmenu)="onRightClick($event, cell)">
+      <span *ngIf="cell.weight !== 1">{{cell.weight}}</span>
 
-      <div class="icon-container" *ngIf="cell.isStart" (mousedown)="onIconMouseDown(cell)">
+      <div class="icon-container" *ngIf="cell.isStart"
+           (mousedown)="onIconMouseDown(cell)">
         <mat-icon>keyboard_arrow_right</mat-icon>
       </div>
 

@@ -39,6 +39,25 @@
   <div class="input-wrapper">
     <button mat-raised-button (click)="reset()">Clear</button>
 
+    <div>
+      <mat-label class="input">Change Animation Velocity</mat-label>
+      <mat-slider [disabled]="!animationCompleted" (input)="velocitySliderChange($event)" thumbLabel min="5" max="20"
+                  step="1"
+                  [(ngModel)]="velocity"></mat-slider>
+    </div>
+
+    <div class="algorithm-selection-container">
+      <mat-form-field>
+        <mat-select (selectionChange)="onAlgorithmChange($event)"
+          [(value)]="selectedAlgorithm" [disabled]="!animationCompleted">
+          <mat-option *ngFor="let algorithm of algorithms" [value]="algorithm">
+            {{algorithm.toString()}}
+          </mat-option>
+
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <div class="button-wrapper">
       <button id="play-button" [class]="playButtonClass" (click)="onPlayClicked()">
         <mat-icon class="play">play_circle_outline</mat-icon>
@@ -50,9 +69,13 @@
   </div>
 </div>
 
+<p [innerHTML]="algorithmDescription"></p>
+<p>The minimum distance from start to target is <span *ngIf="distance!==0" id="distance" [innerHTML]="distance"></span></p>
 
 <div class="container">
-  <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished()"
+  <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished($event)"
+                [velocity]="velocity"
+                [algorithm]="selectedAlgorithm"
                 [resetEvent]="resetSubject.asObservable()"
                 [startEvent]="startSubject.asObservable()"></app-grid-svg>
 </div>

@@ -7,14 +7,14 @@ export class Cell{
   isConstraint : boolean;
   isWall : boolean;
   isVisited : boolean;
-
+  weight : number
   cssClass : string
   previousCssClass : string
   distance : number;
   previousNode : Cell | null
 
-  constructor(row: number, column: number, isStart: boolean,
-              isTarget: boolean, isConstraint: boolean, isWall: boolean, cssClass : string) {
+  constructor(row: number, column: number, isStart: boolean, isTarget: boolean, isConstraint: boolean, isWall: boolean,
+              cssClass : string) {
     this.row = row;
     this.column = column;
     this.isStart = isStart;
@@ -27,10 +27,10 @@ export class Cell{
     this.distance = Number.MAX_VALUE;
     this.previousNode = null
     this.previousCssClass = cssClass
+    this.weight = 1;
   }
 
   setCssClass(cssClass : string){
-    let temp = this.cssClass
     this.previousCssClass = this.cssClass;
     this.cssClass = cssClass
   }

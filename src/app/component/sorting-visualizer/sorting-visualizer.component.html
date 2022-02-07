@@ -10,7 +10,7 @@
 
   <div>
     <mat-label>Change Animation Velocity</mat-label>
-    <mat-slider [disabled]="!animationCompleted" (input)="velocitySliderChange($event)" thumbLabel min="5" max="50" step="1"
+    <mat-slider [disabled]="!animationCompleted" (input)="velocitySliderChange($event)" thumbLabel min="5" max="20" step="1"
                 [(ngModel)]="velocity"></mat-slider>
   </div>
 

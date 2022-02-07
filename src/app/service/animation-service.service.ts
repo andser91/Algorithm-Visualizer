@@ -31,24 +31,27 @@ export class AnimationServiceService {
     }, 25000 - velocity * 1000));
   }
 
-  executeSearchAnimations(animations: Array<Animation>) {
+    executeSearchAnimations(animations: Array<Animation>, velocity: number) {
+    let animationTime = 22 - velocity
     for (let i = 0 ; i < animations.length; i++) {
       let timer = new Timer(() => {
         animations[i].animate();
-      }, i * 10)
+      }, i * animationTime)
       this.timers.push(timer);
     }
 
     this.timers.push(new Timer(() => {
       new TerminationPathAnimation(this).animate();
       this.animationFinishedEvent.emit();
-    }, animations.length * 10));
+    }, animations.length * animationTime));
   }
 
   executeInstantSearchAnimations(animations: Array<Animation>) {
     for (let i = 0; i < animations.length; i++) {
       animations[i].animate();
     }
+    new TerminationPathAnimation(this).animate();
+    this.animationFinishedEvent.emit();
   }
 
 
