@@ -5,7 +5,6 @@
          (mousedown)="onCellMouseDown($event, cell)"
          (mouseup)="onCellMouseUp($event)"
          (mouseenter)="onCellMouseEnter(cell)"
-         (mouseleave)="onCellMouseLeave(cell)"
          (contextmenu)="onRightClick($event, cell)">
       <span *ngIf="cell.weight !== 1">{{cell.weight}}</span>
 

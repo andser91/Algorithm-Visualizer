@@ -13,13 +13,13 @@ export class DfsService extends PathFinder {
     super();
   }
 
-  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
-    let animations = this.dfs(graph, source, target)
+  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean): Array<Animation> {
+    let animations = this.dfs(graph, source, target, diagonal)
     this.findShortestPath(source, target, animations)
     return animations;
   }
 
-  private dfs(graph: Cell[][], source: Cell, target: Cell) : Array<Animation>{
+  private dfs(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean) : Array<Animation>{
     let animations = new Array<Animation>()
     let stack: Cell[] = []
     source.isVisited = true;
@@ -31,7 +31,7 @@ export class DfsService extends PathFinder {
       let node: Cell | undefined = stack.pop()!;
       node.isVisited = true;
       animations.push(new CssClassAnimation(node, "visited"))
-      let neighbourNode = this.getNeighbours(graph, node)
+      let neighbourNode = this.getNeighbours(graph, node, diagonal)
       for (let i = 0; i < neighbourNode.length; i++) {
         if (!neighbourNode[i].isVisited) {
           neighbourNode[i].distance = node.distance + 1;

@@ -62,11 +62,17 @@
       </mat-form-field>
     </div>
 
+<!--    <div id="check-box-container">-->
+<!--      <mat-label class="input">Diagonal Link</mat-label>-->
+<!--      <input class="checkbox" type="checkbox" [disabled]="!animationCompleted" [checked]="diagonal" (change)="diagonal = !diagonal"/>-->
+<!--    </div>-->
+
+
     <div class="button-wrapper">
-      <button id="play-button" [class]="playButtonClass" appDebounceClick [debounceTime]="0" (debounceClick)="onPlayClicked()">
+      <button id="play-button" [class]="playButtonClass" appDebounceClick [debounceTime]="20" (debounceClick)="onPlayClicked()">
         <mat-icon class="play">play_circle_outline</mat-icon>
       </button>
-      <button id="pause-button" [class]="pauseButtonClass" appDebounceClick [debounceTime]="0" (debounceClick)="onPauseClicked()">
+      <button id="pause-button" [class]="pauseButtonClass" appDebounceClick [debounceTime]="20" (debounceClick)="onPauseClicked()">
         <mat-icon class="pause">pause_circle_outline</mat-icon>
       </button>
     </div>
@@ -82,6 +88,7 @@
 <div class="container">
   <app-grid-svg (animationFinishedEventEmitter)="onAnimationFinished($event)"
                 [velocity]="velocity"
+                [diagonal]="diagonal"
                 [algorithm]="selectedAlgorithm"
                 [resetEvent]="resetSubject.asObservable()"
                 [startEvent]="startSubject.asObservable()"></app-grid-svg>

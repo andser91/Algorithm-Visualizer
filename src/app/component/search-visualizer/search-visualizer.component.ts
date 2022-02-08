@@ -25,10 +25,9 @@ export class SearchVisualizerComponent implements OnInit {
   distance : number = 0
   algorithmToDescription = new Map<ShortestPathAlgorithm, string>()
   algorithmDescription: string = "Breath-first Search is <u>unweighted</u> and <u>guarantees</u> the shortest path";
+  diagonal: boolean = false;
 
   constructor() { }
-
-
 
   ngOnInit(): void {
     this.algorithmToDescription.set(ShortestPathAlgorithm.BFS, "Breath-first Search is <u>unweighted</u> and <u>guarantees</u> the shortest path");
@@ -45,6 +44,7 @@ export class SearchVisualizerComponent implements OnInit {
   }
 
   onPlayClicked() {
+     console.log(this.diagonal)
       this.startSubject.next(new PlayShortesPathEvent(this.status));
       this.playButtonClass = "hidden"
       this.pauseButtonClass = "showed"

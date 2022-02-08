@@ -13,13 +13,13 @@ export class BfsService extends PathFinder {
     super();
   }
 
-  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
-    let animations = this.bfs(graph, source, target)
+  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean): Array<Animation> {
+    let animations = this.bfs(graph, source, target, diagonal)
     this.findShortestPath(source, target, animations)
     return animations;
   }
 
-  private bfs(graph: Cell[][], source: Cell, target: Cell) : Array<Animation>{
+  private bfs(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean) : Array<Animation>{
     let animations = new Array<Animation>()
     let queue: Cell[] = []
     source.isVisited = true;
@@ -29,7 +29,7 @@ export class BfsService extends PathFinder {
 
     while (queue.length > 0) {
       let node: Cell | undefined = queue.shift()!;
-      let neighbourNode = this.getNeighbours(graph, node)
+      let neighbourNode = this.getNeighbours(graph, node, diagonal)
       for (let i = 0; i < neighbourNode.length; i++) {
         if (!neighbourNode[i].isVisited) {
           neighbourNode[i].isVisited = true;

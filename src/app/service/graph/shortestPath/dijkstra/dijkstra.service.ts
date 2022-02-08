@@ -14,14 +14,14 @@ export class DijkstraService extends PathFinder{
     super();
   }
 
-  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell): Array<Animation> {
-    let animations = this.dijkstra(graph, source, target)
+  executeAlgorithm(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean): Array<Animation> {
+    let animations = this.dijkstra(graph, source, target, diagonal)
     this.findShortestPath(source, target, animations)
     return animations;
   }
 
 
-  private dijkstra(graph: Cell[][], source: Cell, target: Cell) : Array<Animation> {
+  private dijkstra(graph: Cell[][], source: Cell, target: Cell, diagonal : boolean) : Array<Animation> {
     let animations = new Array<Animation>()
     source.distance = 0;
     let vertex = []
@@ -35,7 +35,7 @@ export class DijkstraService extends PathFinder{
 
     while (currVertex !== null){
       let distance = currVertex.distance
-      let neighbourNode = this.getNeighbours(graph, currVertex)
+      let neighbourNode = this.getNeighbours(graph, currVertex, diagonal)
       for (let i = 0; i < neighbourNode.length; i++){
         let newDistance = distance + neighbourNode[i].weight
         if (neighbourNode[i].distance > newDistance){

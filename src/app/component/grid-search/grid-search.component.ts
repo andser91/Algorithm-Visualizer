@@ -26,7 +26,8 @@ export class GridSearchComponent implements OnInit, OnDestroy {
   private constraintCell: any = null
   @Input()
   algorithm: ShortestPathAlgorithm = ShortestPathAlgorithm.BFS
-
+  @Input()
+  diagonal : boolean = false;
   @Input()
   velocity: number = 10;
   @Input() resetEvent: Observable<void> | undefined;
@@ -53,7 +54,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
 
   private reExecuteAlgorithm() {
     let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
-    let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
+    let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell, this.diagonal)
     this.animationService.executeInstantSearchAnimations(animations)
   }
 
@@ -63,13 +64,13 @@ export class GridSearchComponent implements OnInit, OnDestroy {
         this.reInitializeGrid()
         this.status = AnimationStatus.PLAYING;
         let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
-        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
+        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell, this.diagonal)
         this.animationService.executeSearchAnimations(animations, this.velocity)
         break;
       }
       case AnimationStatus.STOPPED: {
         let algorithmService = this.graphAlgorithmFactory.getService(this.algorithm!)
-        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell)
+        let animations = algorithmService.executeAlgorithm(this.grid, this.startCell, this.targetCell, this.diagonal)
         this.animationService.executeSearchAnimations(animations, this.velocity)
         this.status = AnimationStatus.PLAYING;
         break
@@ -123,7 +124,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
           this.grid[row][col].isVisited = false
           this.grid[row][col].cssClass = "unvisited"
         }
-        if (this.algorithm === ShortestPathAlgorithm.RECURSIVE_DIVISION){
+        if (this.algorithm === ShortestPathAlgorithm.RECURSIVE_DIVISION) {
           this.grid[row][col].isWall = false
           this.grid[row][col].cssClass = "unvisited"
         }
@@ -160,7 +161,7 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCellMouseUp(event : MouseEvent) {
+  onCellMouseUp(event: MouseEvent) {
     if (this.status === AnimationStatus.FINISHED && event.button === 0) {
       this.reInitializeGrid()
       this.reExecuteAlgorithm()
@@ -193,39 +194,29 @@ export class GridSearchComponent implements OnInit, OnDestroy {
     }
     if (this.startSelected) {
       if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isStart = true
-        this.startCell = cell;
-      }
-
-    }
-    if (this.targetSelected) {
-      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isTarget = true
-        this.targetCell = cell
-      }
-    }
-    if (this.constraintSelected) {
-      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isConstraint = true
-        this.constraintCell = cell
-      }
-    }
-  }
-
-  onCellMouseLeave(cell: Cell) {
-    if (this.startSelected) {
-      if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isStart = false
+        if (!this.iconInCell(cell)) {
+          this.startCell.isStart = false;
+          cell.isStart = true
+          this.startCell = cell;
+        }
       }
     }
     if (this.targetSelected) {
       if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isTarget = false
+        if (!this.iconInCell(cell)) {
+          this.targetCell.isTarget = false;
+          cell.isTarget = true
+          this.targetCell = cell
+        }
       }
     }
     if (this.constraintSelected) {
       if (this.status === AnimationStatus.STOPPED || this.status === AnimationStatus.FINISHED) {
-        cell.isConstraint = false
+        if (!this.iconInCell(cell)) {
+          this.constraintCell.isConstraint = false
+          cell.isConstraint = true
+          this.constraintCell = cell
+        }
       }
     }
   }
@@ -270,5 +261,9 @@ export class GridSearchComponent implements OnInit, OnDestroy {
 
   isAlgorithmWeightedSelected(): boolean {
     return this.algorithm === ShortestPathAlgorithm.DIJKSTRA;
+  }
+
+  private iconInCell(cell: Cell) {
+    return cell.isStart || cell.isTarget || cell.isConstraint;
   }
 }

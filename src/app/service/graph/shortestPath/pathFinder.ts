@@ -22,11 +22,10 @@ export abstract class PathFinder extends GraphAlgorithmService {
     }
   }
 
-  protected getNeighbours(graph: Cell[][], cell: Cell): Cell[] {
+  protected getNeighbours(graph: Cell[][], cell: Cell, diagonal : boolean): Cell[] {
     let neighbourNode: Cell[] = []
     let row = cell.row
     let col = cell.column
-
     if (col - 1 >= 0) {
       if (!graph[row][col - 1].isWall) {
         neighbourNode.push(graph[row][col - 1])
@@ -44,6 +43,28 @@ export abstract class PathFinder extends GraphAlgorithmService {
     if (col + 1 < graph[row].length) {
       if (!graph[row][col + 1].isWall) {
         neighbourNode.push(graph[row][col + 1])
+      }
+    }
+    if (diagonal) {
+      if (col - 1 >= 0 && row + 1 < graph.length) {
+        if (!graph[row + 1][col - 1].isWall) {
+          neighbourNode.push(graph[row + 1][col - 1])
+        }
+      }
+      if (col - 1 >=0 && row - 1 >= 0) {
+        if (!graph[row - 1][col - 1].isWall) {
+          neighbourNode.push(graph[row - 1][col - 1])
+        }
+      }
+      if (col + 1 < graph[row].length && row + 1 < graph.length) {
+        if (!graph[row + 1][col + 1].isWall) {
+          neighbourNode.push(graph[row + 1][col + 1])
+        }
+      }
+      if (col + 1 < graph[row].length && row - 1 >= 0) {
+        if (!graph[row - 1][col + 1].isWall) {
+          neighbourNode.push(graph[row - 1][col + 1])
+        }
       }
     }
     return neighbourNode;

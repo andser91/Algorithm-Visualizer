@@ -3,6 +3,6 @@ import {Animation} from "../../model/animation/animation";
 
 export abstract class GraphAlgorithmService{
 
-  abstract executeAlgorithm(graph : Cell[][], source: Cell, targetCell: Cell) : Array<Animation>;
+  abstract executeAlgorithm(graph : Cell[][], source: Cell, targetCell: Cell, diagonal : boolean) : Array<Animation>;
 
 }
